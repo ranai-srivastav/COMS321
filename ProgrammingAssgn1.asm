@@ -7,6 +7,7 @@ Main:
 
     DUMP
     B End
+    // I MIGHT BE DOING UNNECESSARY SP SHIT
   
 //FILL WORKS
 Fill:
@@ -25,6 +26,7 @@ Fill:
         ADDI SP, SP, #16
         BR LR
 
+//Takes addr, val, final_pos in the array
 FindSortedPos:
     SUBI SP, SP, #24
     STUR X0, [SP, #0]
@@ -98,3 +100,4 @@ InsertSortedPosition:
     STUR X10, [X9, #0]
 >>>>//TODO Assuming that X10 still has p
     BR LR
+
