@@ -1,11 +1,14 @@
 Main:
-    ADDI X0, X0, #10
-    ADDI X1, X1, #5
+    ADDI X0, X0, #0
+    ADDI X1, X1, #9
+    
     BL Fill
+    BL InsertionSort
 
     DUMP
     B End
   
+//FILL WORKS
 Fill:
     SUBI SP, SP, #16
     STUR X0, [SP, #0]
@@ -32,7 +35,7 @@ FindSortedPos:
     FindSortedLoop:
         LDUR X9,[X0, #0]
         SUBS XZR, X9, X1
-        B.G FindSorted_End
+        B.GT FindSorted_End
         ADDI X10, X10, #1
         ADDI X0, X0, #8
         B FindSortedLoop
@@ -44,7 +47,7 @@ ShiftRight:
     SUBI X9, X2 , #1
     ShiftRightLoop:
     SUBS XZR, X1, X9
-    B.L ShiftRightEnd
+    B.LE ShiftRightEnd
     LDUR X10, [X0, #0]
     ADDI X0, X0, #8
     STUR X10, [X0, #0]
@@ -52,15 +55,39 @@ ShiftRight:
     ShiftRightEnd:
 
 
+// Gets starting address and length of array
 InsertionSort:
-    ORRI X9, XZR, #1
-    InsertionSort_while:
-    SUBS XZR, X9, X1
-    B.GTE InsertionSort_exit
-    ORRI X2,X1,XZR
-    ORRI X1,X9, XZR
-    BL InsertSortedPosition
-    ADDI X9, #1
+    ADDI X9, XZR, #1
+        InsertionSort_while:
+        SUBS XZR, X9, X1
+        B.GE InsertionSort_exit
+        //Set The right values in the registers X0, X1, X2
+        ORR X2,X1,XZR
+        ORR X1,X9, XZR
+        BL InsertSortedPosition
+        ADDI X9, X9, #1
+        B InsertionSort_while
     InsertionSort_exit:
     
 End:
+
+// Takes addr, pos, final_pos
+InsertSortedPosition:
+    ADD X19, XZR, X0 //addr
+    ADD X20, XZR, X1 // pos
+    ADD X21, XZR, X2 // final_pos
+    // loading addr[pos]
+    ADD X9, XZR, X1
+    LSL X9, #3
+    ADD X9, X0, X9 X9 //stores address of v
+    LDUR X10, [X9, #0] //X10 = v = addr[pos]
+    //X0 already has addr
+    ADD X1, XZR, X10
+    //X2 already has final_pos
+    BL FindSortedPosition
+    //X0 fshould have the return val from FindSortedPos
+    
+
+
+
+    BR LR
