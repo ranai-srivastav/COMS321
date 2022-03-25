@@ -1,0 +1,2 @@
+main:
+MOVZ X0, #124, LSL 0
