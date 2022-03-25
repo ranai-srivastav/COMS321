@@ -73,21 +73,28 @@ End:
 
 // Takes addr, pos, final_pos
 InsertSortedPosition:
-    ADD X19, XZR, X0 //addr
-    ADD X20, XZR, X1 // pos
-    ADD X21, XZR, X2 // final_pos
+    ADD X19, XZR, X0    //addr
+    ADD X20, XZR, X1    // pos
+    ADD X21, XZR, X2    // final_pos
     // loading addr[pos]
     ADD X9, XZR, X1
     LSL X9, #3
-    ADD X9, X0, X9 X9 //stores address of v
-    LDUR X10, [X9, #0] //X10 = v = addr[pos]
+    ADD X9, X0, X9 X9   //stores address of v
+    LDUR X10, [X9, #0]  //X10 = v = addr[pos]
     //X0 already has addr
     ADD X1, XZR, X10
     //X2 already has final_pos
     BL FindSortedPosition
-    //X0 fshould have the return val from FindSortedPos
-    
-
-
-
+    ADD X22, XZR, X0    //p = X22
+    //X0 should have the return val from FindSortedPos
+>>>>//TODO Does FindSorted actually place it in X0?
+    ADD X1, XZR, X0
+    ADD X0, XZR, X19
+    ADD X2, XZR, X20
+    BL ShiftRight
+    //X9 = Address of addr[p]
+    LSL X9, X22, #3
+    ADD X9, X9, X19
+    STUR X10, [X9, #0]
+>>>>//TODO Assuming that X10 still has p
     BR LR
