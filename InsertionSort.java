@@ -7,10 +7,10 @@ public class InsertionSort
 {
     public static void main(String args[])
     {
-        int[] a = new int[12];
-        fill(a, 5);
+        int[] a = new int[10];
+        fill(a, 10);
         System.out.println(Arrays.toString(a));
-        InsertionSorter(a, 5);
+        InsertionSorter(a, 10);
     }
 
     /**

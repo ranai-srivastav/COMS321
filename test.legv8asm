@@ -1,65 +1,100 @@
-ADDI X31, XZR, #31
-ADDI X30, XZR, #30
-ADDI X29, XZR, #29
-ADDI X28, XZR, #28
-ADDI X27, XZR, #27
-ADDI X26, XZR, #26
-ADDI X25, XZR, #25
-ADDI X24, XZR, #24
-ADDI X23, XZR, #23
-ADDI X22, XZR, #22
-ADDI X21, XZR, #21
-ADDI X20, XZR, #20
+Main:
+    ADDI X0, X0, #0
+    ADDI X1, X1, #9
+    
+    BL Fill
+    BL InsertionSort
 
-ADDI X19, XZR, #19
-ADDI X18, XZR, #18
-ADDI X17, XZR, #17
+    DUMP
+    B End
+    // I MIGHT BE DOING UNNECESSARY SP SHIT
+  
+//FILL WORKS
+Fill:
+    SUBI SP, SP, #16
+    STUR X0, [SP, #0]
+    STUR X1, [SP, #8]
+    Fill_loop:
+        CBZ X1, Fill_End
+        STUR X1, [X0, #0]
+        ADDI X0, X0, #8
+        SUBI X1, X1, #1
+        B Fill_loop
+    Fill_End: 
+        LDUR X0, [SP, #0]
+        LDUR X1, [SP, #8]
+        ADDI SP, SP, #16
+        BR LR
 
-ADDI X16, XZR, #15
-ADDI X15, XZR, #15
+//Takes addr, val, final_pos in the array
+FindSortedPos:
+    ADD X9, XZR, XZR
+    // X9 is i and init to 0
+    FindSortedLoop:
+        LDUR X13,[X0, #0]     // val at [i]
+        SUBS XZR, X13, X1    // Comparing i and val
+        B.GT FindSorted_End
+        ADDI X13, X13, #1    // i++
+        ADDI X0, X0, #8
+        B FindSortedLoop
+    FindSorted_End:
+        ADD X0, X10, XZR
+        BL LR
 
-ADDI X14, XZR, #14
-ADDI X13, XZR, #13
-ADDI X12, XZR, #12
-ADDI X11, XZR, #11
-ADDI X10, XZR, #10
-
-ADDI X9, XZR, #9
-ADDI X8, XZR, #8
-ADDI X7, XZR, #7
-ADDI X6, XZR, #6
-ADDI X5, XZR, #5
-ADDI X4, XZR, #4
-ADDI X3, XZR, #3
-ADDI X2, XZR, #2
-ADDI X1, XZR, #1
-ADDI X0, XZR, #0
-
-SUBS X0, X18, X19
-B.D LE
-
-DUMP
-
-EQ:
-PRNT X27
-
-
-GE: 
-PRNT X28
-
-
-GT:
-PRNT X27
-PRNT X28
-
-LE:
-PRNT X26
-PRNT X27
-
-LT:
-PRNT X26
+ShiftRight:
+    SUBI X9, X2 , #1
+    ShiftRightLoop:
+    SUBS XZR, X1, X9
+    B.LE ShiftRightEnd
+    LDUR X10, [X0, #0]
+    ADDI X0, X0, #8
+    STUR X10, [X0, #0]
+    B ShiftRightLoop    
+    ShiftRightEnd:
 
 
-
+// Gets starting address and length of array
+InsertionSort:
+    ADDI X25, XZR, #1     //X25 = i = 1
+        InsertionSort_while:
+        SUBS XZR, X25, X1
+        B.GE InsertionSort_exit
+        //Set The right values in the registers X0, X1, X2
+        SUBI X2, X2, #1
+        ADD X2, XZR, X1
+        ADD X1, XZR, X25
+        BL InsertSortedPosition
+        ADDI X25, X25, #1
+        B InsertionSort_while
+    InsertionSort_exit:
+    
 End:
+
+// Takes addr, pos, final_pos
+InsertSortedPosition:
+    ADD X19, XZR, X0    //addr
+    ADD X20, XZR, X1    // pos
+    ADD X21, XZR, X2    // final_pos
+    // loading addr[pos]
+    ADD X9, XZR, X1
+    LSL X9, #3
+    ADD X9, X0, X9     //stores address of v
+    LDUR X10, [X9, #0]  //X10 = v = addr[pos]
+    //X0 already has addr
+    ADD X1, XZR, X10
+    //X2 already has final_pos
+    BL FindSortedPosition
+    ADD X22, XZR, X0    //p = X22
+    //X0 should have the return val from FindSortedPos
+>>>>//TODO Does FindSorted actually place it in X0?
+    ADD X1, XZR, X0
+    ADD X0, XZR, X19
+    ADD X2, XZR, X20
+    BL ShiftRight
+    //X9 = Address of addr[p]
+    LSL X9, X22, #3
+    ADD X9, X9, X19
+    STUR X10, [X9, #0]
+>>>>//TODO Assuming that X10 still has p
+    BR LR
 
