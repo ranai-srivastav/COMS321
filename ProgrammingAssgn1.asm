@@ -1,3 +1,7 @@
+// Group members
+// Ranai Srivastav, netid: ranais@iastate.edu    student id:544032541
+// Antara Shah,     netid: antaras@iastate.edu   student id: 677922293
+
 Main:
     ADDI X0, X0, #0
     ADDI X1, X1, #9
@@ -64,29 +68,39 @@ InsertSortedPos:
     LDUR X10, [X9, #0]  //X10 = v = addr[pos]
     //X0 already has addr
     ADD X1, XZR, X10
-    //X2 already has final_pos
+    //X2 already has final_pos  
+        SUBI SP,SP,#8   
+        STUR LR,[SP,#0]
     BL Find_Sort_Position
+        LDUR LR ,[SP,#0]
+        ADDI SP,SP,#8
     ADD X22, XZR, X0    //&p = X22
     //X0 should have the return addr from FindSortedPos
     ADD X1, XZR, X0     
     ADD X0, XZR, X19
     ADD X2, XZR, X20
-    BL ShiftRight
+        SUBI SP,SP,#8
+        STUR LR,[SP,#0]
+    BL ShiftRight   
+        LDUR LR ,[SP,#0]
+        ADDI SP,SP,#8
     STUR X10, [X22, #0]
     BR LR
 
 // Gets starting address and length of array
 InsertionSort:
     ADDI X25, XZR, #1     //X25 = i = 1
+    ADD X23, XZR, X0
+    ADD X24, XZR, X1
     InsertionSort_while:
-        SUBS XZR, X25, X1
-        //B.GE End
+        SUBS XZR, X25, X24
+        PRNT X25
+        B.GE End
         //Set The right values in the registers X0, X1, X2
-        SUBI X2, X1, #1
+        SUBI X2, X24, #1
         ADD X1, XZR, X25
         BL InsertSortedPos
         ADDI X25, X25, #1
         B InsertionSort_while
-
 End:
-DUMP
+    HALT
