@@ -1,65 +1,22 @@
-ADDI X31, XZR, #31
-ADDI X30, XZR, #30
-ADDI X29, XZR, #29
-ADDI X28, XZR, #28
-ADDI X27, XZR, #27
-ADDI X26, XZR, #26
-ADDI X25, XZR, #25
-ADDI X24, XZR, #24
-ADDI X23, XZR, #23
-ADDI X22, XZR, #22
-ADDI X21, XZR, #21
-ADDI X20, XZR, #20
+Main:
+    
+    BL Dumbo
 
-ADDI X19, XZR, #19
-ADDI X18, XZR, #18
-ADDI X17, XZR, #17
-
-ADDI X16, XZR, #15
-ADDI X15, XZR, #15
-
-ADDI X14, XZR, #14
-ADDI X13, XZR, #13
-ADDI X12, XZR, #12
-ADDI X11, XZR, #11
-ADDI X10, XZR, #10
-
-ADDI X9, XZR, #9
-ADDI X8, XZR, #8
-ADDI X7, XZR, #7
-ADDI X6, XZR, #6
-ADDI X5, XZR, #5
-ADDI X4, XZR, #4
-ADDI X3, XZR, #3
-ADDI X2, XZR, #2
-ADDI X1, XZR, #1
-ADDI X0, XZR, #0
-
-SUBS X0, X18, X19
-B.D LE
-
-DUMP
-
-EQ:
-PRNT X27
+    DUMP
+    B End
+    // I MIGHT BE DOING UNNECESSARY SP SHIT
 
 
-GE: 
-PRNT X28
-
-
-GT:
-PRNT X27
-PRNT X28
-
-LE:
-PRNT X26
-PRNT X27
-
-LT:
-PRNT X26
-
-
+//Takes addr, val, final_pos in the array
+Dumbo:
+    PRNT X10
+    FindSortedLoop:
+        LDUR X13,[X0, #0]     // val at [i]
+        SUBS XZR, X13, X1     // Comparing i and val
+        B.GE FindSorted_End
+        ADDI X0, X0, #8
+        B FindSortedLoop
+    FindSorted_End:
+    BR LR
 
 End:
-

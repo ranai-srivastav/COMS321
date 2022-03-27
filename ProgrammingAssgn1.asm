@@ -2,13 +2,24 @@ Main:
     ADDI X0, X0, #0
     ADDI X1, X1, #9
     
-    BL Fill
+    BL Fill 
     BL InsertionSort
 
-    DUMP
     B End
     // I MIGHT BE DOING UNNECESSARY SP SHIT
-  
+
+//Takes addr, val, final_pos in the array
+Find_Sort_Position:
+    ADD XZR, XZR, XZR
+    FindSortedLoop:
+        LDUR X13,[X0, #0]     // val at [i]
+        SUBS XZR, X13, X1     // Comparing i and val
+        B.GT FindSorted_End
+        ADDI X0, X0, #8
+        B FindSortedLoop
+    FindSorted_End:
+    BR LR
+
 //FILL WORKS
 Fill:
     SUBI SP, SP, #16
@@ -27,28 +38,18 @@ Fill:
     BR LR
 
 ShiftRight:
-    SUBI X2, X2 , #8     //finalpos-1
+    SUBI X2, X2 , #1     //finalpos-1
     LSL X2, X2, #3
     ADD X2, X2, X0
     ShiftRightLoop:
-        SUBS XZR, X1, X2     // comparing &pos and x9
+        SUBS XZR, X2, X1     // comparing &pos and x9
         B.LT ShiftRightEnd
-        LDUR X9, [X2, #0]
-        SUBI X2, X2, #8
-        STUR X9, [X2, #0]
+        LDUR X12, [X2, #0]
+        ADDI X2, X2, #8
+        STUR X12, [X2, #0]
+        SUBI X2, X2, #16
         B ShiftRightLoop    
 ShiftRightEnd:
-    BR LR
-
-//Takes addr, val, final_pos in the array
-FindSortedPos:
-    FindSortedLoop:
-        LDUR X13,[X0, #0]     // val at [i]
-        SUBS XZR, X13, X1     // Comparing i and val
-        B.GE FindSorted_End
-        ADDI X0, X0, #8
-        B FindSortedLoop
-    FindSorted_End:
     BR LR
 
 // Takes addr, pos, final_pos
@@ -64,7 +65,7 @@ InsertSortedPos:
     //X0 already has addr
     ADD X1, XZR, X10
     //X2 already has final_pos
-    BL FindSortedPos
+    BL Find_Sort_Position
     ADD X22, XZR, X0    //&p = X22
     //X0 should have the return addr from FindSortedPos
     ADD X1, XZR, X0     
@@ -79,10 +80,9 @@ InsertionSort:
     ADDI X25, XZR, #1     //X25 = i = 1
     InsertionSort_while:
         SUBS XZR, X25, X1
-        B.GE End
+        //B.GE End
         //Set The right values in the registers X0, X1, X2
-        SUBI X2, X2, #1
-        ADD X2, XZR, X1
+        SUBI X2, X1, #1
         ADD X1, XZR, X25
         BL InsertSortedPos
         ADDI X25, X25, #1
