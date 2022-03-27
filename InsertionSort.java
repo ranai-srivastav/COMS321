@@ -7,10 +7,11 @@ public class InsertionSort
 {
     public static void main(String args[])
     {
-        int[] a = new int[12];
-        fill(a, 5);
+        int len = 9;
+        int[] a = new int[len];
+        fill(a, len);
         System.out.println(Arrays.toString(a));
-        InsertionSorter(a, 5);
+        InsertionSorter(a, len);
     }
 
     /**
@@ -19,7 +20,7 @@ public class InsertionSort
      */
     public static void fill(int[] addr, int length)
     {
-        int i = length-1;
+        int i = length;
         int j = 0;
         while(j<length)
         {
@@ -42,13 +43,30 @@ public class InsertionSort
         // *addr gives the value in a[0]
         // addr[pos] = 0;
         // 4 3 2 1 0
-        for(int i = end_pos-1; i >= pos; i--)
-        {
-            addr[i+1] = addr[i];
-        }
+//        for(int i = end_pos-1; i >= pos; i--)
+//        {
+//            addr[i+1] = addr[i];
+//        }
+
+          end_pos = end_pos - 1;
+          while(true)
+          {
+              if(end_pos < pos)
+                  return;
+             // end_pos = end_pos +1;
+
+              int temp = addr[end_pos];
+              end_pos++;
+              addr[end_pos] = temp; // end_pos + 1 = end_pos
+              end_pos -= 2;
+
+//              addr[end_pos+1] = addr[end_pos];
+//              end_pos--;
+          }
+
     }
 
-/**
+    /**
  * @brief This procedure takes three parameters, the address of an array of sorted ints, a value, 
  * and the index of the last element in the array.  It searches the array for the sorted position of the value and returns that index.
  * 
@@ -58,11 +76,12 @@ public class InsertionSort
 public static int FindSortedPos(int[] addr, int val, int final_pos)
 {
     int i = 0;
-    while(i <= final_pos && addr[i] <= val )
+    while(true)
     {
+        if(addr[i] > val)
+            return i;
         i += 1;
     }
-    return i;
 }
 
 /**
