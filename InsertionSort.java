@@ -12,6 +12,12 @@ public class InsertionSort
         fill(a, len);
         System.out.println(Arrays.toString(a));
         InsertionSorter(a, len);
+
+//        int[] a = new int[10];
+//        fill(a, 10);
+//        System.out.println(Arrays.toString(a));
+//        InsertionSorter(a, 10);
+
     }
 
     /**
@@ -104,8 +110,10 @@ public static int FindSortedPos(int[] addr, int val, int final_pos)
     public static void InsertionSorter(int[] addr, int length)
     {
         int i = 1;
-        while(i < length)
+        while(true)
         {
+            if(i >= length)
+                break;
             InsertSortedPosition(addr, i, length - 1);
             i = i + 1;
         }
