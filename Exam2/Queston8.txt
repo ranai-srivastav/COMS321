@@ -1,0 +1,53 @@
+for(j=0; j<0; j++){
+    for(i=0; i<n; i++){
+        Some Code
+    }
+}
+
+Top Inner Loop:
+    SUB X2, X0, X1
+    CBZ X2, end_inner_loop
+    // loop body
+    ADDI X1, X1, 1
+    B top_inner_loop
+    end_inner_loop
+
+n > X0
+i > x1
+
+0 implies not taken
+
+1'b predictor on the CBZ instruction and 2'b on the CBZ instruction??
+
+A 1'b branch predictor:
+    The CBZ branch should only be taken once per iteration of the outer loop. That is 100 times total. 
+    It starts at 0 -> implies not taken. 
+    Control enters the loop and based on this does not take the branch. This is right.
+    The loop runs n times, each time not taking the branch. At the last iteration it predicts not jumping to the end, which is wrong. 
+    1 error in n iterations 
+    Gets set to 1, and the ctrol exits the loop. 
+    
+    The next time the code comes to this loop. based on the bit set to 1, it jumps to the exit condition, which is false. 
+    Makes 1 error at the start of the loop per n iterations
+    Makes 1 error at the end of the loop per n iterations
+    Assuming n is 100
+
+    so error rate is 1/100*100 + (2/100*100)*99 = (199)/10000  Accuracy ~= 98.01%
+
+
+A 2'b branch predictor
+
+    The CBZ branch should only be taken once per iteration of the outer loop. That is 100 times total. 
+    It starts at 00 -> implies not taken. 
+    Control enters the loop and based on this does not take the branch. This is right.
+    The loop runs n times, each time not taking the branch. At the last iteration it predicts not jumping to the end, which is wrong. 
+    1 error in n iterations.
+    Gets set to 01, and the control exits the loop. 
+    
+    The next time the code comes to this loop. based on the bit set to 01, it does not jump to the exit condition, which is true. 
+    At the end of the loop, it sees that it is 00 and does not take the branch which is wrong. Gets set to 01.
+    Makes 1 error at the end of the loop per n iterations
+    Assuming n is 100
+
+    1/n^2 = 1/10000 = 99.99%
+
