@@ -7,23 +7,26 @@ import java.util.Scanner; // Import the Scanner class to read text files
 import javax.print.DocFlavor.STRING;
 
 public class Decode {
-
+    static ArrayList<String> list = new ArrayList<>(); 
+    static ArrayList<String> inst = new ArrayList<>();
     public static void main(String[] args) {
-        ArrayList<String> inst = new ArrayList<>();  
+         String[] name = new String[100];
         try {
             File myObj = new File("opcodes.txt");
             Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-
+            while (myReader.hasNext()) {
                 String data = myReader.nextLine();
-                // System.out.println(data);
+                list.add(data);
 
             }
+            System.out.println(list.get(1));
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+
+
         // Read input text 
         try {
             File myObj = new File("input.txt");
@@ -38,7 +41,8 @@ public class Decode {
                         one = "";
                     }
                 }
-                System.out.println(inst);
+                //System.out.println(inst.get(2));
+            //    System.out.println(inst);
             }
             myReader.close();
         } catch (FileNotFoundException e) {
@@ -46,5 +50,7 @@ public class Decode {
             e.printStackTrace();
         }
     }
+
+    
 
 }
