@@ -19,7 +19,7 @@ public class Decode {
                 list.add(data);
 
             }
-            System.out.println(list.get(1));
+         //   System.out.println(list);
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
@@ -42,7 +42,7 @@ public class Decode {
                     }
                 }
                 //System.out.println(inst.get(2));
-            //    System.out.println(inst);
+                System.out.println(inst);
             }
             myReader.close();
         } catch (FileNotFoundException e) {
