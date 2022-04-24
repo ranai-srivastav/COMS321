@@ -1,8 +1,6 @@
 public class Tree
 {
     Node root = new Node();
-
-    // TODO Now go through the list and generate.
 }
 
 class Node
@@ -58,5 +56,15 @@ class Node
     {
         this.zero = zero;
     }
+    public Instruction getInstruction()
+    {
+        return i;
+    }
+
+    public void setInstruction(Instruction i)
+    {
+        this.i = i;
+    }
+
 
 }
