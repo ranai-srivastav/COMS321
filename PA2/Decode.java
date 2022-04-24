@@ -1,0 +1,78 @@
+import java.io.File;  // Import the File class
+import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Scanner; // Import the Scanner class to read text files
+
+public class Decode
+{
+    static ArrayList<String> list = new ArrayList<>();
+    static ArrayList<String> inst = new ArrayList<>();
+
+    public static void main(String[] args)
+    {
+        String[] name = new String[100];
+        try
+        {
+            File myObj = new File("opcodes.txt");
+            Scanner myReader = new Scanner(myObj);
+            while(myReader.hasNext())
+            {
+                String data = myReader.nextLine();
+                list.add(data);
+            }
+            myReader.close();
+        } catch(FileNotFoundException e)
+        {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        ArrayList<Instruction> allInstructions = new ArrayList<>();
+
+        for(int i = 1; i < list.size() - 1; i++)
+        {
+            Instruction instruction = new Instruction();
+            String s = list.get(i);
+
+            int start = s.indexOf("\"");
+            int end = s.indexOf("\"", start + 1);
+            instruction.setName(s.substring(start + 1, end));
+
+            int opcodeEnd = s.lastIndexOf("}");
+            int opcodeBegin = s.lastIndexOf("b");
+            instruction.setOpcode(s.substring(opcodeBegin + 1, opcodeEnd - 1).trim());
+            allInstructions.add(instruction);
+        }
+
+
+        // Read input text
+        try
+        {
+            File myObj = new File("input.txt");
+            Scanner myReader = new Scanner(myObj);
+            while(myReader.hasNext())
+            {
+                String one = "";
+                String data = myReader.next();
+                for(int i = 0; i < data.length(); i++)
+                {
+                    one += data.charAt(i);
+                    if(one.length() % 32 == 0)
+                    {
+                        inst.add(one);
+                        one = "";
+                    }
+                }
+                System.out.println(inst.get(2));
+                System.out.println(inst);
+            }
+            myReader.close();
+        } catch(FileNotFoundException e)
+        {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+}
+
