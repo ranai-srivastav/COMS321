@@ -2,6 +2,9 @@ public class Instruction
 {
     private String name;
     private String opcode;
+    public String type;
+    public Sring[] R = {ADD,"ADDS","ANDS","BR","EOR","LSL","LSR","ORR","SUB","SUBS",} ;
+    public Sring[] D = new Array[100];
 
     public Instruction(){}
 
@@ -9,6 +12,21 @@ public class Instruction
     {
         this.name = name;
         this.opcode = opcode;
+        if(opcode.length()== 10){
+            type = "R-type/D-type/IW-type";
+
+        }
+        if(opcode.length()== 9){
+            type = "I-type";
+        }
+        if(opcode.length()== 5){
+            type = "B-type";
+        }
+        if(opcode.length()== 7){
+            type = "CB-type";
+        }
+    
+        
     }
 
     public String toString()
@@ -34,4 +52,19 @@ public class Instruction
     {
         this.opcode = opcode;
     }
+
+    public String getType()
+    {
+        return type;
+    }
+    
+    public void setType(String type)
+    {
+        this.type = type;
+    }
+
+    
+
+
+
 }

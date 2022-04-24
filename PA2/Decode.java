@@ -65,7 +65,7 @@ public class Decode
                     }
                 }
                 System.out.println(inst.get(2));
-                System.out.println(inst);
+             System.out.println(inst);
             }
             myReader.close();
         } catch(FileNotFoundException e)
@@ -74,5 +74,6 @@ public class Decode
             e.printStackTrace();
         }
     }
+ 
 }
 
