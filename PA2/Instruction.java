@@ -3,8 +3,8 @@ public class Instruction
     private String name;
     private String opcode;
     public String type;
-    public Sring[] R = {"ADD","ADDS","ANDS","BR","EOR","LSL","LSR","ORR","SUB","SUBS","UDIV","UMULT"} ;
-    public Sring[] D = {"LDUR","LDURB",""};
+    public String[] R = {"ADD","ADDS","ANDS","BR","EOR","LSL","LSR","ORR","SUB","SUBS"} ;
+    public String[] D = {"LDUR","LDURB",""};
 
     public Instruction(){}
 
@@ -63,8 +63,9 @@ public class Instruction
         this.type = type;
     }
 
-    
+}
 
-
+class RType extends Instruction
+{
 
 }
