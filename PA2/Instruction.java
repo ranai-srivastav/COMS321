@@ -3,28 +3,28 @@ public class Instruction
     private String name;
     private String opcode;
     public String type;
-    public Sring[] R = {"ADD","ADDS","ANDS","BR","EOR","LSL","LSR","ORR","SUB","SUBS","UDIV","UMULT"} ;
-    public Sring[] D = {"LDUR","LDURB",""};
+
 
     public Instruction(){}
 
-    public Instruction(String name, String opcode)
+    public Instruction(String name, String opcode,String type)
     {
         this.name = name;
         this.opcode = opcode;
-        if(opcode.length()== 10){
-            type = "R-type/D-type/IW-type";
-
-        }
-        if(opcode.length()== 9){
-            type = "I-type";
-        }
-        if(opcode.length()== 5){
-            type = "B-type";
-        }
-        if(opcode.length()== 7){
-            type = "CB-type";
-        }
+        this.type = type;
+//        if(opcode.length()== 10){
+//            type = "R-type/D-type/IW-type";
+//
+//        }
+//        if(opcode.length()== 9){
+//            type = "I-type";
+//        }
+//        if(opcode.length()== 5){
+//            type = "B-type";
+//        }
+//        if(opcode.length()== 7){
+//            type = "CB-type";
+//        }
     
         
     }

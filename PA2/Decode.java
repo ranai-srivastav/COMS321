@@ -36,6 +36,41 @@ public class Decode
             int opcodeEnd = s.lastIndexOf("}");
             int opcodeBegin = s.lastIndexOf("b");
             instruction.setOpcode(s.substring(opcodeBegin + 1, opcodeEnd - 1).trim());
+
+            String[] R = {"ADD","AND","BR","EOR","LSL","LSR","ORR","SUB","SUBS","MUL"} ;
+            String[] D = {"LDUR","STUR"};
+
+
+             if(instruction.getOpcode().length() == 10){
+                 instruction.setType("I-type");
+             }
+
+            if(instruction.getOpcode().length() == 6){
+                instruction.setType("B-type");
+            }
+            if(instruction.getOpcode().length() == 8){
+                instruction.setType("CB-type");
+            }
+
+            if(instruction.getOpcode().length() == 11){
+                for(int j = 0; j < R.length ; j++){
+                    if (R[j].equals(instruction.getName())){
+                        instruction.setType("R-type");
+                    }
+                }
+
+                for (int k = 0 ; k < D.length ; k++){
+                    if( D[k].equals(instruction.getName())){
+                        instruction.setType("D-type");
+                    }
+                }
+            }
+            if(instruction.getType() == null){
+                instruction.setType("S");
+            }
+
+
+
             allInstructions.add(instruction);
         }
 
