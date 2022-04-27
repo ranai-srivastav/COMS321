@@ -11,23 +11,17 @@ public class Decode
 
     public static void main(String[] args)
     {
-        String[] name = new String[100];
-        try
-        {
-            File myObj = new File("opcodes.txt");
-            Scanner myReader = new Scanner(myObj);
-            while(myReader.hasNext())
-            {
-                String data = myReader.nextLine();
-                list.add(data);
-            }
-            myReader.close();
-        } catch(FileNotFoundException e)
-        {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+        readBitsFromFile();
+        readOpcodesFromFile();
 
+        ArrayList<Instruction> allInstructions = parseInstruction();
+
+        Tree opcodeTree = treeGen(allInstructions);
+        System.out.println("Hi");
+    }
+
+    public static ArrayList<Instruction> parseInstruction()
+    {
         ArrayList<Instruction> allInstructions = new ArrayList<>();
 
         for(int i = 1; i < list.size() - 1; i++)
@@ -45,8 +39,11 @@ public class Decode
             allInstructions.add(instruction);
         }
 
+        return allInstructions;
+    }
 
-        // Read input text
+    public static void readBitsFromFile()
+    {
         try
         {
             File myObj = new File("input.txt");
@@ -64,8 +61,28 @@ public class Decode
                         one = "";
                     }
                 }
-                System.out.println(inst.get(2));
-             System.out.println(inst);
+            }
+            myReader.close();
+        }
+
+        catch(FileNotFoundException e)
+        {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public static void readOpcodesFromFile()
+    {
+        String[] name = new String[100];
+        try
+        {
+            File myObj = new File("opcodes.txt");
+            Scanner myReader = new Scanner(myObj);
+            while(myReader.hasNext())
+            {
+                String data = myReader.nextLine();
+                list.add(data);
             }
             myReader.close();
         } catch(FileNotFoundException e)
@@ -74,6 +91,33 @@ public class Decode
             e.printStackTrace();
         }
     }
- 
+
+    public static Tree treeGen(ArrayList<Instruction> instructions)
+    {
+        Tree t = new Tree();
+        for(Instruction inst: instructions)
+            for(int i = 0; i<opCode.length(); i++)
+            {
+                char bit = opCode.charAt(i);
+                if(bit == '0')
+                {
+                    if(iterator.getZero() == null)
+                        iterator.setZero(new Node(iterator, null, null));
+                    iterator = iterator.getZero();
+                }
+                else
+                {
+                    if(iterator.getOne() == null)
+                        iterator.setOne(new Node(iterator, null, null));
+                    iterator = iterator.getOne();
+                }
+            }
+//            iterator = iterator.getParent();
+            iterator.setOne(null);
+            iterator.setZero(null);
+            iterator.setInstruction(inst);
+        }
+        return t;
+    }
 }
 
