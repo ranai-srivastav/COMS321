@@ -1,6 +1,6 @@
 public class Tree
 {
-    Node root = new Node();
+    final Node root = new Node();
 }
 
 class Node

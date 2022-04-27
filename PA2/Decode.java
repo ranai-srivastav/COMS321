@@ -1,5 +1,7 @@
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner; // Import the Scanner class to read text files
@@ -17,7 +19,69 @@ public class Decode
         ArrayList<Instruction> allInstructions = parseInstruction();
 
         Tree opcodeTree = treeGen(allInstructions);
-        System.out.println("Hi");
+
+        decode(opcodeTree, inst);
+    }
+
+    public static void decode(Tree opcodeTree, ArrayList<String> listOfInstructions)
+    {
+        File toWrite = new File("decompiledCode.txt");
+        try
+        {
+            Instruction currInst;
+            Node iterator = opcodeTree.root;
+            for(int k = 0; k < listOfInstructions.size(); k++)
+            {
+                String binaryInst = listOfInstructions.get(k);
+                int i = 0;
+                while(iterator.getInstruction() != null)
+                {
+                    char c = binaryInst.charAt(i);
+                    if(c == '0')
+                    {
+                        iterator = iterator.getZero();
+                    }
+                    else
+                    {
+                        iterator = iterator.getOne();
+                    }
+                    i++;
+                    if(i > 11) throw new IllegalStateException("You fucked up " +
+                            "\n   k = " + k
+                    );
+
+                }
+                currInst = iterator.getInstruction();
+
+                if(currInst.getType().equals("R"))
+                {
+                    decodeRType();
+                }
+            }
+        }
+        catch(IOException e)
+        {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void decodeRType(Instruction inst, String binInst, File outputFile)
+    {
+        String rm = binInst.substring(3,6);
+        int rmInt = convertBinToDec(rm);
+    }
+
+    
+    public int convertBinToDec(String toConvert)
+    {
+        int returnable = 0;
+        for(int i = 0; i < toConvert.length(); i++)
+        {
+            char c = toConvert.charAt(toConvert.length() - i - 1);
+            int bit = Integer.parseInt(String.valueOf(c));
+            returnable += Math.pow(bit, i);
+        }
+        return returnable;
     }
 
     public static ArrayList<Instruction> parseInstruction()
@@ -70,6 +134,9 @@ public class Decode
             }
 
 
+            // list of insts here
+            //
+            // allInstructions.setType("XYZ")''
 
             allInstructions.add(instruction);
         }

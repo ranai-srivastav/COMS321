@@ -4,7 +4,6 @@ public class Instruction
     private String opcode;
     public String type;
 
-
     public Instruction(){}
 
     public Instruction(String name, String opcode,String type)
@@ -12,19 +11,7 @@ public class Instruction
         this.name = name;
         this.opcode = opcode;
         this.type = type;
-//        if(opcode.length()== 10){
-//            type = "R-type/D-type/IW-type";
-//
-//        }
-//        if(opcode.length()== 9){
-//            type = "I-type";
-//        }
-//        if(opcode.length()== 5){
-//            type = "B-type";
-//        }
-//        if(opcode.length()== 7){
-//            type = "CB-type";
-//        }
+
     
         
     }
@@ -63,8 +50,9 @@ public class Instruction
         this.type = type;
     }
 
-    
+}
 
-
+class RType extends Instruction
+{
 
 }
