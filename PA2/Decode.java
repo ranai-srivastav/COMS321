@@ -17,7 +17,6 @@ public class Decode
         ArrayList<Instruction> allInstructions = parseInstruction();
 
         Tree opcodeTree = treeGen(allInstructions);
-        System.out.println("Hi");
     }
 
     public static ArrayList<Instruction> parseInstruction()
