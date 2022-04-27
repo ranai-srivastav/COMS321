@@ -17,6 +17,7 @@ public class Decode
         ArrayList<Instruction> allInstructions = parseInstruction();
 
         Tree opcodeTree = treeGen(allInstructions);
+        System.out.println("Hi");
     }
 
     public static ArrayList<Instruction> parseInstruction()
@@ -95,6 +96,9 @@ public class Decode
     {
         Tree t = new Tree();
         for(Instruction inst: instructions)
+        {
+            Node iterator = t.root;
+            String opCode = inst.getOpcode();
             for(int i = 0; i<opCode.length(); i++)
             {
                 char bit = opCode.charAt(i);
@@ -119,4 +123,3 @@ public class Decode
         return t;
     }
 }
-
