@@ -3,8 +3,8 @@ public class Instruction
     private String name;
     private String opcode;
     public String type;
-    public Sring[] R = {ADD,"ADDS","ANDS","BR","EOR","LSL","LSR","ORR","SUB","SUBS",} ;
-    public Sring[] D = new Array[100];
+    public Sring[] R = {"ADD","ADDS","ANDS","BR","EOR","LSL","LSR","ORR","SUB","SUBS","UDIV","UMULT"} ;
+    public Sring[] D = {"LDUR","LDURB",""};
 
     public Instruction(){}
 
