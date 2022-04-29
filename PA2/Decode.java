@@ -78,19 +78,23 @@ public class Decode
         // shamt  15 - 10   16 - 21
         // rn      9 - 5    22 - 26
         // rd      4 - 0    27 - 31
-
+        if(binInst.length() != 32)
+            throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
 
         String rm = binInst.substring(11, 15);
         String shamt = binInst.substring(16, 21);
-        String rn = binInst.substring(5, 9);
-        String rd = binInst.substring(0, 4);
+        String rn = binInst.substring(22, 26);
+        String rd = binInst.substring(27, 31);
 
         int rmInt = convertBinToDec(rm);
         int shamtInt = convertBinToDec(shamt);
         int rnInt = convertBinToDec(rn);
         int rdInt = convertBinToDec(rd);
 
-        return String.format("%s %d, %d, %d", currInst.getName(), rmInt, rnInt, rdInt);
+        if(currInst.getName().contains("I"))
+            return String.format("%s X%d, X%d, #%d", currInst.getName(), rmInt, rnInt, rdInt);
+        else
+            return String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt);
     }
 
     public static int convertBinToDec(String toConvert)
