@@ -11,9 +11,6 @@ public class Instruction
         this.name = name;
         this.opcode = opcode;
         this.type = type;
-
-    
-        
     }
 
     public String toString()

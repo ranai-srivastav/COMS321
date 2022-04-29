@@ -11,7 +11,7 @@ public class Decode
     static ArrayList<String> list = new ArrayList<>();
     static ArrayList<String> inst = new ArrayList<>();
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
         readBitsFromFile();
         readOpcodesFromFile();
@@ -22,7 +22,7 @@ public class Decode
 
 //        decode(opcodeTree, inst);
 
-//        decodeRType(new Instruction("ADD", "1000101100", "R"));
+        System.out.println(decodeRType(new Instruction("ADD", "1000101100", "R"), "10001011001010010100011101010110", new File("opcodes.txt")));
     }
 
     public static void decode(Tree opcodeTree, ArrayList<String> listOfInstructions)
@@ -32,36 +32,6 @@ public class Decode
         {
             Instruction currInst;
             Node iterator = opcodeTree.root;
-<<<<<<< HEAD
-           for(int k = 0; k < listOfInstructions.size(); k++)
-           {
-               String binaryInst = listOfInstructions.get(k);
-               int i = 0;
-               while(iterator.getInstruction() != null)
-               {
-                   char c = binaryInst.charAt(i);
-                   if(c == '0')
-                   {
-                       iterator = iterator.getZero();
-                   }
-                   else
-                   {
-                       iterator = iterator.getOne();
-                   }
-                   i++;
-                   if(i > 11) throw new IllegalStateException("You fucked up " +
-                           "\n   k = " + k
-                   );
-
-               }
-               currInst = iterator.getInstruction();
-
-               if(currInst.getType().equals("R"))
-               {
-                   decodeRType(currInst, binaryInst, toWrite);
-               }
-           }
-=======
             for(int k = 0; k < listOfInstructions.size(); k++)
             {
                 String binaryInst = listOfInstructions.get(k);
@@ -87,10 +57,9 @@ public class Decode
 
                 if(currInst.getType().equals("R"))
                 {
-                    decodeRType();
+                    decodeRType(currInst, binaryInst, toWrite);
                 }
             }
->>>>>>> f3e06c76220c8837cbd278081b934216d5bcb668
         }
         catch(IOException e)
         {
@@ -124,12 +93,7 @@ public class Decode
         return String.format("%s %d, %d, %d", currInst.getName(), rmInt, rnInt, rdInt);
     }
 
-<<<<<<< HEAD
     public static int convertBinToDec(String toConvert)
-=======
-    
-    public int convertBinToDec(String toConvert)
->>>>>>> f3e06c76220c8837cbd278081b934216d5bcb668
     {
         int returnable = 0;
         for(int i = 0; i < toConvert.length(); i++)
@@ -158,39 +122,6 @@ public class Decode
             int opcodeEnd = s.lastIndexOf("}");
             int opcodeBegin = s.lastIndexOf("b");
             instruction.setOpcode(s.substring(opcodeBegin + 1, opcodeEnd - 1).trim());
-
-            String[] R = {"ADD","AND","BR","EOR","LSL","LSR","ORR","SUB","SUBS","MUL"} ;
-            String[] D = {"LDUR","STUR"};
-
-
-             if(instruction.getOpcode().length() == 10){
-                 instruction.setType("I-type");
-             }
-
-            if(instruction.getOpcode().length() == 6){
-                instruction.setType("B-type");
-            }
-            if(instruction.getOpcode().length() == 8){
-                instruction.setType("CB-type");
-            }
-
-            if(instruction.getOpcode().length() == 11){
-                for(int j = 0; j < R.length ; j++){
-                    if (R[j].equals(instruction.getName())){
-                        instruction.setType("R-type");
-                    }
-                }
-
-                for (int k = 0 ; k < D.length ; k++){
-                    if( D[k].equals(instruction.getName())){
-                        instruction.setType("D-type");
-                    }
-                }
-            }
-            if(instruction.getType() == null){
-                instruction.setType("S");
-            }
-
 
             // list of insts here
             //
