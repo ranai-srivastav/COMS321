@@ -20,7 +20,9 @@ public class Decode
 
         Tree opcodeTree = treeGen(allInstructions);
 
-        decode(opcodeTree, inst);
+//        decode(opcodeTree, inst);
+
+//        decodeRType(new Instruction("ADD", "1000101100", "R"));
     }
 
     public static void decode(Tree opcodeTree, ArrayList<String> listOfInstructions)
@@ -55,7 +57,7 @@ public class Decode
 
                if(currInst.getType().equals("R"))
                {
-                   decodeRType();
+                   decodeRType(currInst, binaryInst, toWrite);
                }
            }
         }
@@ -65,20 +67,41 @@ public class Decode
         }
     }
 
-    public void decodeRType(Instruction inst, String binInst, File outputFile)
+    public static String decodeRType(Instruction currInst, String binInst, File outputFile) throws IOException
     {
-        String rm = binInst.substring(3,6);
+        // 0                              31
+        // ________________________________
+        // 31                             0
+        // Name    R - L    L - R
+        // opcode 31 - 21   0  - 10
+        // Rm     20 - 16   11 - 15
+        // shamt  15 - 10   16 - 21
+        // rn      9 - 5    22 - 26
+        // rd      4 - 0    27 - 31
+
+
+        String rm = binInst.substring(11, 15);
+        String shamt = binInst.substring(16, 21);
+        String rn = binInst.substring(5, 9);
+        String rd = binInst.substring(0, 4);
+
         int rmInt = convertBinToDec(rm);
+        int shamtInt = convertBinToDec(shamt);
+        int rnInt = convertBinToDec(rn);
+        int rdInt = convertBinToDec(rd);
+
+        return String.format("%s %d, %d, %d", currInst.getName(), rmInt, rnInt, rdInt);
     }
 
-    public int convertBinToDec(String toConvert)
+    public static int convertBinToDec(String toConvert)
     {
         int returnable = 0;
         for(int i = 0; i < toConvert.length(); i++)
         {
             char c = toConvert.charAt(toConvert.length() - i - 1);
             int bit = Integer.parseInt(String.valueOf(c));
-            returnable += Math.pow(bit, i);
+            double pow = (bit == 0) ? 0 : Math.pow(2 * bit, i);
+            returnable += pow;
         }
         return returnable;
     }
