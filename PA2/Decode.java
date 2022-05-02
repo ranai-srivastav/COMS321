@@ -22,11 +22,11 @@ public class Decode
 
         decode(opcodeTree, inst);
 
-//        System.out.println(decodeRType(new Instruction("ADD", "1000101100", "R"), "10001011001010010100011101010110", new File("opcodes.txt")));
-//        System.out.println(decodeRType(new Instruction("ADDI", "1001000100 ", "I"), "10010001001010010100011101010110", new File("opcodes.txt")));
+        System.out.println(decodeRType(new Instruction("ADD", "1000101100", "R"), "10001011001010010100011101010110", new File("opcodes.txt")));
+        System.out.println(decodeRType(new Instruction("ADDI", "1001000100 ", "I"), "10010001001010010100011101010110", new File("opcodes.txt")));
     }
 
-    public static void decode(Tree opcodeTree, ArrayList<String> listOfInstructions)
+    public static void decode (Tree opcodeTree, ArrayList<String> listOfInstructions)
     {
         File toWrite = new File("decompiledCode.txt");
         try
