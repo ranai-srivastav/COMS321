@@ -1,10 +1,9 @@
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner; // Import the Scanner class to read text files
+
 
 public class Decode
 {
@@ -64,6 +63,19 @@ public class Decode
                 {
                     decodeIType(currInst, binaryInst, toWrite);
                 }
+                else if(currInst.getType().equals("D"))
+                {
+                    decodeDType(currInst, binaryInst, toWrite);
+                }
+                else if(currInst.getType().equals("B"))
+                {
+                    decodeBType(currInst, binaryInst, toWrite);
+                }
+                else if(currInst.getType().equals("CB"))
+                {
+                    decodeCBType(currInst, binaryInst, toWrite);
+                }
+
             }
         }
         catch(IOException e)
@@ -273,8 +285,9 @@ public class Decode
         return allInstructions;
     }
 
-    public static void readBitsFromFile()
+    public static ArrayList<String> readBitsFromFile()
     {
+       // ArrayList<ArrayList<Character>>instructions = new ArrayList<Character>();
         try
         {
             File myObj = new File("machineinputfile");
@@ -282,17 +295,20 @@ public class Decode
             while(myReader.hasNext())
             {
                 String one = "";
-                String data = myReader.next();
+                String data = myReader.nextLine();
                 for(int i = 0; i < data.length(); i++)
                 {
                     one += data.charAt(i);
                     if(one.length() % 32 == 0)
                     {
                         inst.add(one);
+                       // instructions.add(inst)
+
                         one = "";
                     }
                 }
             }
+            System.out.println(inst);
             myReader.close();
         }
 
@@ -301,6 +317,8 @@ public class Decode
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+
+        return inst;
     }
 
     public static void readOpcodesFromFile()
