@@ -112,6 +112,7 @@ public class Decode
         //AUL-Imm 21 - 10   10 - 21
         // rn      9 - 5    22 - 26
         // rd      4 - 0    27 - 31
+
         if(binInst.length() != 32)
             throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
 
