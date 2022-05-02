@@ -23,6 +23,7 @@ public class Decode
 //        decode(opcodeTree, inst);
 
         System.out.println(decodeRType(new Instruction("ADD", "1000101100", "R"), "10001011001010010100011101010110", new File("opcodes.txt")));
+        System.out.println(decodeRType(new Instruction("ADDI", "1001000100 ", "I"), "10010001001010010100011101010110", new File("opcodes.txt")));
     }
 
     public static void decode(Tree opcodeTree, ArrayList<String> listOfInstructions)
@@ -59,6 +60,9 @@ public class Decode
                 {
                     decodeRType(currInst, binaryInst, toWrite);
                 }
+                else if(currInst.getType().equals("I")){
+                    decodeIType(currInst, binaryInst, toWrite);
+                }
             }
         }
         catch(IOException e)
@@ -68,6 +72,63 @@ public class Decode
     }
 
     public static String decodeRType(Instruction currInst, String binInst, File outputFile) throws IOException
+    {
+        // 0                              31
+        // ________________________________
+        // 31                             0
+        // Name    R - L    L - R
+        // opcode 31 - 21   0  - 10
+        // Rm     20 - 16   11 - 15
+        // shamt  15 - 10   16 - 21
+        // rn      9 - 5    22 - 26
+        // rd      4 - 0    27 - 31
+        if(binInst.length() != 32)
+            throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
+
+        String rm = binInst.substring(11, 15);
+        String shamt = binInst.substring(16, 21);
+        String rn = binInst.substring(22, 26);
+        String rd = binInst.substring(27, 31);
+
+        int rmInt = convertBinToDec(rm);
+        int shamtInt = convertBinToDec(shamt);
+        int rnInt = convertBinToDec(rn);
+        int rdInt = convertBinToDec(rd);
+
+        if(currInst.getName().contains("I"))
+            return String.format("%s X%d, X%d, #%d", currInst.getName(), rmInt, rnInt, rdInt);
+        else
+            return String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt);
+    }
+
+    public static String decodeIType(Instruction currInst, String binInst, File outputFile) throws IOException
+    {
+        // 0                              31
+        // ________________________________
+        // 31                             0
+        // Name    R - L    L - R
+        // opcode 31 - 22   0  - 9
+        //AUL-Imm 21 - 10   10 - 21
+        // rn      9 - 5    22 - 26
+        // rd      4 - 0    27 - 31
+        if(binInst.length() != 32)
+            throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
+
+        String AUL = binInst.substring(10, 21);
+        String rn = binInst.substring(22, 26);
+        String rd = binInst.substring(27, 31);
+
+        int AULInt = convertBinToDec(AUL);
+        int rnInt = convertBinToDec(rn);
+        int rdInt = convertBinToDec(rd);
+
+        if(currInst.getName().contains("I"))
+            return String.format("%s X%d, X%d, #%d", currInst.getName(), AULInt, rnInt, rdInt);
+        else
+            return String.format("%s X%d, X%d, X%d", currInst.getName(), AULInt, rnInt, rdInt);
+    }
+
+    public static String decodeDType(Instruction currInst, String binInst, File outputFile) throws IOException
     {
         // 0                              31
         // ________________________________
