@@ -152,10 +152,7 @@ public class Decode
         int rnInt = convertBinToDec(rn);
         int rdInt = convertBinToDec(rd);
 
-        if(currInst.getName().contains("I"))
-            return String.format("%s X%d, X%d, #%d", currInst.getName(), rmInt, rnInt, rdInt);
-        else
-            return String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt);
+        return String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt);
     }
 
     public static int convertBinToDec(String toConvert)
