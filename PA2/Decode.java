@@ -135,27 +135,70 @@ public class Decode
         // 31                             0
         // Name    R - L    L - R
         // opcode 31 - 21   0  - 10
-        // Rm     20 - 16   11 - 15
-        // shamt  15 - 10   16 - 21
+        // Dt     20 - 12   11 - 19
+        // op      11 - 10   20 - 21
         // rn      9 - 5    22 - 26
-        // rd      4 - 0    27 - 31
+        // rt      4 - 0    27 - 31
         if(binInst.length() != 32)
             throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
 
-        String rm = binInst.substring(11, 15);
-        String shamt = binInst.substring(16, 21);
+        String Dt = binInst.substring(11, 19);
+        String op = binInst.substring(20, 21);
         String rn = binInst.substring(22, 26);
-        String rd = binInst.substring(27, 31);
+        String rt = binInst.substring(27, 31);
 
-        int rmInt = convertBinToDec(rm);
-        int shamtInt = convertBinToDec(shamt);
+        int rmInt = convertBinToDec(Dt);
+        int shamtInt = convertBinToDec(op);
         int rnInt = convertBinToDec(rn);
-        int rdInt = convertBinToDec(rd);
+        int rdInt = convertBinToDec(rt);
 
         if(currInst.getName().contains("I"))
             return String.format("%s X%d, X%d, #%d", currInst.getName(), rmInt, rnInt, rdInt);
         else
             return String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt);
+    }
+    public static String decodeBType(Instruction currInst, String binInst, File outputFile) throws IOException
+    {
+        // 0                              31
+        // ________________________________
+        // 31                             0
+        // Name    R - L    L - R
+        // opcode   31 - 26   0  - 5
+        // Br        20 - 12   6 - 31
+
+        if(binInst.length() != 32)
+            throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
+
+
+        String bin = binInst.substring(6,31);
+
+
+        int dec = convertBinToDec(bin);
+        return String.format("%s %d", currInst.getName(), dec);
+
+    }
+    public static String decodeCBType(Instruction currInst, String binInst, File outputFile) throws IOException
+    {
+        // 0                              31
+        // ________________________________
+        // 31                             0
+        // Name    R - L    L - R
+        // opcode   31 - 24   0  - 7
+        // Br        23 - 5   8 - 26
+        //rn       4 - 0      27 - 31
+
+        if(binInst.length() != 32)
+            throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
+
+// TODO
+        // Complete method
+
+        String bin = binInst.substring(6,31);
+
+
+        int dec = convertBinToDec(bin);
+        return String.format("%s %d", currInst.getName(), dec);
+
     }
 
     public static int convertBinToDec(String toConvert)
