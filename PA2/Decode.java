@@ -1,7 +1,4 @@
-import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner; // Import the Scanner class to read text files
 
@@ -280,40 +277,57 @@ public class Decode
         return allInstructions;
     }
 
-    public static ArrayList<String> readBitsFromFile()
+    public static void readBitsFromFile()
     {
        // ArrayList<ArrayList<Character>>instructions = new ArrayList<Character>();
-        try
-        {
-            File myObj = new File("machineinputfile");
-            Scanner myReader = new Scanner(myObj);
-            while(myReader.hasNext())
-            {
-                String one = "";
-                String data = myReader.nextLine();
-                for(int i = 0; i < data.length(); i++)
-                {
-                    one += data.charAt(i);
-                    if(one.length() % 32 == 0)
-                    {
-                        inst.add(one);
-                       // instructions.add(inst)
+//        try
+//        {
+//            File myObj = new File("machineinputfile");
+//            Scanner myReader = new Scanner(myObj);
+//            while(myReader.hasNext())
+//            {
+//                String one = "";
+//                String data = myReader.next();
+//
+//                for(int i = 0; i < data.length(); i++)
+//                {
+//                    one += data.charAt(i);
+//                    if(one.length() % 32 == 0)
+//                    {
+//                        inst.add(one);
+//                       // instructions.add(inst)
+//
+//                        one = "";
+//                    }
+//                }
+//            }
+//           // System.out.println(inst);
+//            myReader.close();
+//        }
+//
+//        catch(FileNotFoundException e)
+//        {
+//            System.out.println("An error occurred.");
+//            e.printStackTrace();
+//        }
+//
+//        return inst;
+        try {
+            // create a reader
+            FileInputStream fis = new FileInputStream(new File("machineinputfile"));
 
-                        one = "";
-                    }
-                }
+            // read one byte at a time
+            int ch;
+            while ((ch = fis.read()) != -1) {
+                System.out.print((char) ch);
             }
-            System.out.println(inst);
-            myReader.close();
-        }
 
-        catch(FileNotFoundException e)
-        {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+            // close the reader
+            fis.close();
 
-        return inst;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void readOpcodesFromFile()

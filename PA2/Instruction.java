@@ -49,7 +49,3 @@ public class Instruction
 
 }
 
-class RType extends Instruction
-{
-
-}
