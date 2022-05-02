@@ -22,8 +22,8 @@ public class Decode
 
 //        decode(opcodeTree, inst);
 
-        System.out.println(decodeRType(new Instruction("ADD", "1000101100", "R"), "10001011001010010100011101010110", new File("opcodes.txt")));
-        System.out.println(decodeRType(new Instruction("ADDI", "1001000100 ", "I"), "10010001001010010100011101010110", new File("opcodes.txt")));
+//        System.out.println(decodeRType(new Instruction("ADD", "1000101100", "R"), "10001011001010010100011101010110", new File("opcodes.txt")));
+//        System.out.println(decodeRType(new Instruction("ADDI", "1001000100 ", "I"), "10010001001010010100011101010110", new File("opcodes.txt")));
     }
 
     public static void decode(Tree opcodeTree, ArrayList<String> listOfInstructions)
@@ -60,7 +60,8 @@ public class Decode
                 {
                     decodeRType(currInst, binaryInst, toWrite);
                 }
-                else if(currInst.getType().equals("I")){
+                else if(currInst.getType().equals("I"))
+                {
                     decodeIType(currInst, binaryInst, toWrite);
                 }
             }
@@ -174,27 +175,60 @@ public class Decode
         return String.format("%s %d", currInst.getName(), dec);
 
     }
+
     public static String decodeCBType(Instruction currInst, String binInst, File outputFile) throws IOException
     {
         // 0                              31
         // ________________________________
         // 31                             0
-        // Name    R - L    L - R
-        // opcode   31 - 24   0  - 7
-        // Br        23 - 5   8 - 26
-        //rn       4 - 0      27 - 31
+        // Name      R - L     L - R
+        // opcode    31 - 24   0  - 7
+        // Br        23 - 5    8 - 26
+        // rt        4 - 0     27 - 31
 
         if(binInst.length() != 32)
             throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
 
-// TODO
-        // Complete method
+        int rt = convertBinToDec(binInst.substring(27, 31));
+        int branchTo = convertBinToDec(binInst.substring(8 ,26));
 
-        String bin = binInst.substring(6,31);
+        String cond = "";
+        switch(rt)
+        {
+            case 0: cond = "EQ"; break;
+
+            case 1: cond = "NE"; break;
+
+            case 2: cond = "HS"; break;
+
+            case 3: cond = "LO"; break;
+
+            case 4: cond = "MI"; break;
+
+            case 5: cond = "PL"; break;
+
+            case 6: cond = "VS"; break;
+
+            case 7: cond = "VC"; break;
+
+            case 8: cond = "HI"; break;
+
+            case 9: cond = "LS"; break;
+
+            case 10: cond = "GE"; break;
+
+            case 11: cond = "LT"; break;
+
+            case 12: cond = "GT"; break;
+
+            case 13: cond = "LE"; break;
+
+            default: throw new IllegalStateException("CB rt value is should be less than 16 but is " + rt);
+        }
 
 
-        int dec = convertBinToDec(bin);
-        return String.format("%s %d", currInst.getName(), dec);
+
+        return String.format("%s %d", "B." + cond, branchTo);
 
     }
 
