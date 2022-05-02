@@ -1,7 +1,5 @@
-import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Scanner; // Import the Scanner class to read text files
 
@@ -14,13 +12,13 @@ public class Decode
     public static void main(String[] args) throws IOException
     {
         readBitsFromFile();
-        readOpcodesFromFile();
-
-        ArrayList<Instruction> allInstructions = parseInstruction();
-
-        Tree opcodeTree = treeGen(allInstructions);
-
-        decode(opcodeTree, inst);
+//        readOpcodesFromFile();
+//
+//        ArrayList<Instruction> allInstructions = parseInstruction();
+//
+//        Tree opcodeTree = treeGen(allInstructions);
+//
+//        decode(opcodeTree, inst);
 
     }
 
@@ -280,31 +278,39 @@ public class Decode
         return allInstructions;
     }
 
-    public static ArrayList<String> readBitsFromFile()
+    public static void readBitsFromFile()
     {
-       // ArrayList<ArrayList<Character>>instructions = new ArrayList<Character>();
         try
         {
-            File myObj = new File("machineinputfile");
-            Scanner myReader = new Scanner(myObj);
-            while(myReader.hasNext())
-            {
-                String one = "";
-                String data = myReader.nextLine();
-                for(int i = 0; i < data.length(); i++)
-                {
-                    one += data.charAt(i);
-                    if(one.length() % 32 == 0)
-                    {
-                        inst.add(one);
-                       // instructions.add(inst)
+            File file = new File("assignment1.legv8asm.machine");
+            FileInputStream fis = new FileInputStream(file);
+            FileReader fr = new FileReader(file);
+//            ObjectInputStream ois = new ObjectInputStream(isr);
 
-                        one = "";
-                    }
-                }
+            int line = fis.read();
+            while(line != -1)
+            {
+//                System.out.println(fis.read());
+                System.out.println(fr.read());
+                line = fis.read();
+//                System.out.println((byte) line);
             }
-            System.out.println(inst);
-            myReader.close();
+//                String one = "";
+//                String data = myReader.nextLine();
+//                for(int i = 0; i < data.length(); i++)
+//                {
+//                    one += data.charAt(i);
+//                    if(one.length() % 32 == 0)
+//                    {
+//                        inst.add(one);
+//                       // instructions.add(inst)
+//
+//                        one = "";
+//                    }
+//                }
+//            }
+//            System.out.println(inst);
+//            myReader.close();
         }
 
         catch(FileNotFoundException e)
@@ -312,8 +318,12 @@ public class Decode
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+        catch(IOException e)
+        {
+            throw new RuntimeException(e);
+        }
 
-        return inst;
+//        return inst;
     }
 
     public static void readOpcodesFromFile()
