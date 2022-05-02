@@ -22,15 +22,14 @@ public class Decode
 
         decode(opcodeTree, inst);
 
-        System.out.println(decodeRType(new Instruction("ADD", "1000101100", "R"), "10001011001010010100011101010110", new File("opcodes.txt")));
-        System.out.println(decodeRType(new Instruction("ADDI", "1001000100 ", "I"), "10010001001010010100011101010110", new File("opcodes.txt")));
     }
 
     public static void decode(Tree opcodeTree, ArrayList<String> listOfInstructions)
     {
-        File toWrite = new File("decompiledCode.txt");
         try
         {
+            File toWrite = new File("decompiledCode.txt");
+            FileWriter fw = new FileWriter(toWrite);
             Instruction currInst;
             Node iterator = opcodeTree.root;
             for(int k = 0; k < listOfInstructions.size(); k++)
@@ -58,11 +57,11 @@ public class Decode
 
                 if(currInst.getType().equals("R"))
                 {
-                    decodeRType(currInst, binaryInst, toWrite);
+                    decodeRType(currInst, binaryInst, fw);
                 }
                 else if(currInst.getType().equals("I"))
                 {
-                    decodeIType(currInst, binaryInst, toWrite);
+                    decodeIType(currInst, binaryInst, fw);
                 }
             }
         }
@@ -72,7 +71,7 @@ public class Decode
         }
     }
 
-    public static String decodeRType(Instruction currInst, String binInst, File outputFile) throws IOException
+    public static void decodeRType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
     {
         // 0                              31
         // ________________________________
@@ -96,13 +95,11 @@ public class Decode
         int rnInt = convertBinToDec(rn);
         int rdInt = convertBinToDec(rd);
 
-        if(currInst.getName().contains("I"))
-            return String.format("%s X%d, X%d, #%d", currInst.getName(), rmInt, rnInt, rdInt);
-        else
-            return String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt);
+
+        outputFile.write(String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt));
     }
 
-    public static String decodeIType(Instruction currInst, String binInst, File outputFile) throws IOException
+    public static void decodeIType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
     {
         // 0                              31
         // ________________________________
@@ -124,13 +121,10 @@ public class Decode
         int rnInt = convertBinToDec(rn);
         int rdInt = convertBinToDec(rd);
 
-        if(currInst.getName().contains("I"))
-            return String.format("%s X%d, X%d, #%d", currInst.getName(), AULInt, rnInt, rdInt);
-        else
-            return String.format("%s X%d, X%d, X%d", currInst.getName(), AULInt, rnInt, rdInt);
+        outputFile.write(String.format("%s X%d, X%d, #%d", currInst.getName(), AULInt, rnInt, rdInt));
     }
 
-    public static String decodeDType(Instruction currInst, String binInst, File outputFile) throws IOException
+    public static void decodeDType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
     {
         // 0                              31
         // ________________________________
@@ -154,9 +148,9 @@ public class Decode
         int rnInt = convertBinToDec(rn);
         int rdInt = convertBinToDec(rt);
 
-        return String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt);
+        outputFile.write(String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt));
     }
-    public static String decodeBType(Instruction currInst, String binInst, File outputFile) throws IOException
+    public static void decodeBType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
     {
         // 0                              31
         // ________________________________
@@ -173,11 +167,11 @@ public class Decode
 
 
         int dec = convertBinToDec(bin);
-        return String.format("%s %d", currInst.getName(), dec);
+        outputFile.write(String.format("%s %d", currInst.getName(), dec));
 
     }
 
-    public static String decodeCBType(Instruction currInst, String binInst, File outputFile) throws IOException
+    public static String decodeCBType(Instruction currInst, String binInst, FileWriter outputFile)
     {
         // 0                              31
         // ________________________________
