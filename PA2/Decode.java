@@ -20,7 +20,7 @@ public class Decode
 
         Tree opcodeTree = treeGen(allInstructions);
 
-//        decode(opcodeTree, inst);
+        decode(opcodeTree, inst);
 
 //        System.out.println(decodeRType(new Instruction("ADD", "1000101100", "R"), "10001011001010010100011101010110", new File("opcodes.txt")));
 //        System.out.println(decodeRType(new Instruction("ADDI", "1001000100 ", "I"), "10010001001010010100011101010110", new File("opcodes.txt")));
@@ -276,7 +276,7 @@ public class Decode
     {
         try
         {
-            File myObj = new File("input.txt");
+            File myObj = new File("machineinputfile");
             Scanner myReader = new Scanner(myObj);
             while(myReader.hasNext())
             {
