@@ -1,6 +1,6 @@
 import java.io.*;
+import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Scanner; // Import the Scanner class to read text files
 
 
 public class Decode
@@ -11,13 +11,13 @@ public class Decode
     public static void main(String[] args) throws IOException
     {
         readBitsFromFile();
-        readOpcodesFromFile();
-
-        ArrayList<Instruction> allInstructions = parseInstruction();
-
-        Tree opcodeTree = treeGen(allInstructions);
-
-        decode(opcodeTree, inst);
+//        readOpcodesFromFile();
+//
+//        ArrayList<Instruction> allInstructions = parseInstruction();
+//
+//        Tree opcodeTree = treeGen(allInstructions);
+//
+//        decode(opcodeTree, inst);
 
     }
 
@@ -279,39 +279,8 @@ public class Decode
 
     public static void readBitsFromFile()
     {
-       // ArrayList<ArrayList<Character>>instructions = new ArrayList<Character>();
-//        try
-//        {
-//            File myObj = new File("machineinputfile");
-//            Scanner myReader = new Scanner(myObj);
-//            while(myReader.hasNext())
-//            {
-//                String one = "";
-//                String data = myReader.next();
-//
-//                for(int i = 0; i < data.length(); i++)
-//                {
-//                    one += data.charAt(i);
-//                    if(one.length() % 32 == 0)
-//                    {
-//                        inst.add(one);
-//                       // instructions.add(inst)
-//
-//                        one = "";
-//                    }
-//                }
-//            }
-//           // System.out.println(inst);
-//            myReader.close();
-//        }
-//
-//        catch(FileNotFoundException e)
-//        {
-//            System.out.println("An error occurred.");
-//            e.printStackTrace();
-//        }
-//
-//        return inst;
+        ArrayList<Character> inst = new ArrayList<>();
+
         try {
             // create a reader
             FileInputStream fis = new FileInputStream(new File("machineinputfile"));
@@ -320,6 +289,19 @@ public class Decode
             int ch;
             while ((ch = fis.read()) != -1) {
                 System.out.print((char) ch);
+
+//                try {
+//                    FileWriter myWriter = new FileWriter("input.txt");
+//                    myWriter.write((char) ch);
+//                    myWriter.close();
+//
+//                }
+//                catch (IOException e) {
+//
+//                    e.printStackTrace();
+//                }
+
+
             }
 
             // close the reader
@@ -328,56 +310,7 @@ public class Decode
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
     }
 
-    public static void readOpcodesFromFile()
-    {
-        String[] name = new String[100];
-        try
-        {
-            File myObj = new File("opcodes.txt");
-            Scanner myReader = new Scanner(myObj);
-            while(myReader.hasNext())
-            {
-                String data = myReader.nextLine();
-                list.add(data);
-            }
-            myReader.close();
-        } catch(FileNotFoundException e)
-        {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }
-
-    public static Tree treeGen(ArrayList<Instruction> instructions)
-    {
-        Tree t = new Tree();
-        for(Instruction inst: instructions)
-        {
-            Node iterator = t.root;
-            String opCode = inst.getOpcode();
-            for(int i = 0; i<opCode.length(); i++)
-            {
-                char bit = opCode.charAt(i);
-                if(bit == '0')
-                {
-                    if(iterator.getZero() == null)
-                        iterator.setZero(new Node(iterator, null, null));
-                    iterator = iterator.getZero();
-                }
-                else
-                {
-                    if(iterator.getOne() == null)
-                        iterator.setOne(new Node(iterator, null, null));
-                    iterator = iterator.getOne();
-                }
-            }
-//            iterator = iterator.getParent();
-            iterator.setOne(null);
-            iterator.setZero(null);
-            iterator.setInstruction(inst);
-        }
-        return t;
-    }
 }
