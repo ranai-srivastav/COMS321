@@ -1,7 +1,6 @@
 import java.io.*;
-import java.nio.Buffer;
+import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Scanner; // Import the Scanner class to read text files
 
 
 public class Decode
@@ -280,100 +279,38 @@ public class Decode
 
     public static void readBitsFromFile()
     {
-        try
-        {
-            File file = new File("assignment1.legv8asm.machine");
-            FileInputStream fis = new FileInputStream(file);
-            FileReader fr = new FileReader(file);
-//            ObjectInputStream ois = new ObjectInputStream(isr);
+        ArrayList<Character> inst = new ArrayList<>();
 
-            int line = fis.read();
-            while(line != -1)
-            {
-//                System.out.println(fis.read());
-                System.out.println(fr.read());
-                line = fis.read();
-//                System.out.println((byte) line);
-            }
-//                String one = "";
-//                String data = myReader.nextLine();
-//                for(int i = 0; i < data.length(); i++)
-//                {
-//                    one += data.charAt(i);
-//                    if(one.length() % 32 == 0)
-//                    {
-//                        inst.add(one);
-//                       // instructions.add(inst)
+        try {
+            // create a reader
+            FileInputStream fis = new FileInputStream(new File("machineinputfile"));
+
+            // read one byte at a time
+            int ch;
+            while ((ch = fis.read()) != -1) {
+                System.out.print((char) ch);
+
+//                try {
+//                    FileWriter myWriter = new FileWriter("input.txt");
+//                    myWriter.write((char) ch);
+//                    myWriter.close();
 //
-//                        one = "";
-//                    }
 //                }
-//            }
-//            System.out.println(inst);
-//            myReader.close();
-        }
+//                catch (IOException e) {
+//
+//                    e.printStackTrace();
+//                }
 
-        catch(FileNotFoundException e)
-        {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        catch(IOException e)
-        {
-            throw new RuntimeException(e);
-        }
 
-//        return inst;
-    }
-
-    public static void readOpcodesFromFile()
-    {
-        String[] name = new String[100];
-        try
-        {
-            File myObj = new File("opcodes.txt");
-            Scanner myReader = new Scanner(myObj);
-            while(myReader.hasNext())
-            {
-                String data = myReader.nextLine();
-                list.add(data);
             }
-            myReader.close();
-        } catch(FileNotFoundException e)
-        {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+
+            // close the reader
+            fis.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
+
     }
 
-    public static Tree treeGen(ArrayList<Instruction> instructions)
-    {
-        Tree t = new Tree();
-        for(Instruction inst: instructions)
-        {
-            Node iterator = t.root;
-            String opCode = inst.getOpcode();
-            for(int i = 0; i<opCode.length(); i++)
-            {
-                char bit = opCode.charAt(i);
-                if(bit == '0')
-                {
-                    if(iterator.getZero() == null)
-                        iterator.setZero(new Node(iterator, null, null));
-                    iterator = iterator.getZero();
-                }
-                else
-                {
-                    if(iterator.getOne() == null)
-                        iterator.setOne(new Node(iterator, null, null));
-                    iterator = iterator.getOne();
-                }
-            }
-//            iterator = iterator.getParent();
-            iterator.setOne(null);
-            iterator.setZero(null);
-            iterator.setInstruction(inst);
-        }
-        return t;
-    }
 }
