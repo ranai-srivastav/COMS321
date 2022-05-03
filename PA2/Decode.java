@@ -31,7 +31,7 @@ public class Decode
             File toWrite = new File("decompiledCode.txt");
             FileWriter fw = new FileWriter(toWrite);
             Instruction currInst;
-            for(int k = 0; k < 13; k++)
+            for(int k = 0; k < listOfInstructions.size(); k++)
             {
                 Node iterator = opcodeTree.root;
                 String binaryInst = listOfInstructions.get(k);
@@ -274,23 +274,23 @@ public class Decode
 
     }
 
+//    public static int convertBinToDec(String toConvert)
+//    {
+//        int returnable = 0;
+//            for(int i = 0; i < toConvert.length(); i++)
+//            {
+//                char c = toConvert.charAt(toConvert.length() - i - 1);
+//                int bit = Integer.parseInt(String.valueOf(c));
+//                double pow = (bit == 0) ? 0 : Math.pow(2 * bit, i);
+//                returnable += pow;
+//            }
+//            return returnable;
+//    }
+
     public static int convertBinToDec(String toConvert)
     {
-        int returnable = 0;
-            for(int i = 0; i < toConvert.length(); i++)
-            {
-                char c = toConvert.charAt(toConvert.length() - i - 1);
-                int bit = Integer.parseInt(String.valueOf(c));
-                double pow = (bit == 0) ? 0 : Math.pow(2 * bit, i);
-                returnable += pow;
-            }
-            return returnable;
-    }
-
-    public static int convert2sToDec(String toConvert)
-    {
         int k = 1;
-        if (toConvert.charAt(0) == '1')
+        if (toConvert.charAt(0) == '1' && toConvert.length() > 5)
         {
             String s = "";
             int i = toConvert.length()-1;
