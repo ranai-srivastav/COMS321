@@ -10,6 +10,8 @@ public class Decode
     static ArrayList<String> list = new ArrayList<>();
     static ArrayList<String> inst = new ArrayList<>();
 
+
+
     public static void main(String[] args) throws IOException
     {
         readBitsFromFile();
@@ -22,16 +24,16 @@ public class Decode
         decode(opcodeTree, inst);
     }
 
-    public static void decode (Tree opcodeTree, ArrayList<String> listOfInstructions)
+    public static void decode(Tree opcodeTree, ArrayList<String> listOfInstructions)
     {
         try
         {
             File toWrite = new File("decompiledCode.txt");
             FileWriter fw = new FileWriter(toWrite);
             Instruction currInst;
-            Node iterator = opcodeTree.root;
             for(int k = 0; k < listOfInstructions.size(); k++)
             {
+                Node iterator = opcodeTree.root;
                 String binaryInst = listOfInstructions.get(k);
                 int i = 0;
                 while(iterator.getInstruction() == null)
@@ -40,8 +42,7 @@ public class Decode
                     if(c == '0')
                     {
                         iterator = iterator.getZero();
-                    }
-                    else
+                    } else
                     {
                         iterator = iterator.getOne();
                     }
@@ -55,30 +56,27 @@ public class Decode
                 if(currInst.getType().equals("R"))
                 {
                     decodeRType(currInst, binaryInst, fw);
-                }
-                else if(currInst.getType().equals("I"))
+                } else if(currInst.getType().equals("I"))
                 {
                     decodeIType(currInst, binaryInst, fw);
-                }
-                else if(currInst.getType().equals("D"))
+                } else if(currInst.getType().equals("D"))
                 {
                     decodeDType(currInst, binaryInst, fw);
-                }
-                else if(currInst.getType().equals("B"))
+                } else if(currInst.getType().equals("B"))
                 {
                     decodeBType(currInst, binaryInst, fw);
-                }
-                else if(currInst.getType().equals("CB"))
+                } else if(currInst.getType().equals("CB"))
                 {
                     decodeCBType(currInst, binaryInst, fw);
                 }
 
             }
-        }
-        catch(IOException e)
+            fw.close();
+        } catch(IOException e)
         {
             System.err.println(e.getMessage());
         }
+
     }
 
     public static void decodeRType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
@@ -107,7 +105,7 @@ public class Decode
         int rdInt = convertBinToDec(rd);
 
 
-        outputFile.write(String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt));
+        outputFile.write(String.format("%s X%d, X%d, X%d\n", currInst.getName(), rmInt, rnInt, rdInt));
     }
 
     public static void decodeIType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
@@ -122,7 +120,7 @@ public class Decode
         // rd      4 - 0    27 - 31
 
         if(binInst.length() != 32)
-            throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
+            throw new IllegalStateException("decodeIType binInstruction is not 32. Length is " + binInst.length());
 
         String AUL = binInst.substring(10, 21);
         String rn = binInst.substring(22, 26);
@@ -132,7 +130,7 @@ public class Decode
         int rnInt = convertBinToDec(rn);
         int rdInt = convertBinToDec(rd);
 
-        outputFile.write(String.format("%s X%d, X%d, #%d", currInst.getName(), AULInt, rnInt, rdInt));
+        outputFile.write(String.format("%s X%d, X%d, #%d\n", currInst.getName(), AULInt, rnInt, rdInt));
     }
 
     public static void decodeDType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
@@ -147,7 +145,7 @@ public class Decode
         // rn      9 - 5    22 - 26
         // rt      4 - 0    27 - 31
         if(binInst.length() != 32)
-            throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
+            throw new IllegalStateException("decodeDType binInstruction is not 32. Length is " + binInst.length());
 
         String Dt = binInst.substring(11, 19);
         String op = binInst.substring(20, 21);
@@ -159,8 +157,9 @@ public class Decode
         int rnInt = convertBinToDec(rn);
         int rdInt = convertBinToDec(rt);
 
-        outputFile.write(String.format("%s X%d, X%d, X%d", currInst.getName(), rmInt, rnInt, rdInt));
+        outputFile.write(String.format("%s X%d, X%d, X%d\n", currInst.getName(), rmInt, rnInt, rdInt));
     }
+
     public static void decodeBType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
     {
         // 0                              31
@@ -171,14 +170,14 @@ public class Decode
         // Br        20 - 12   6 - 31
 
         if(binInst.length() != 32)
-            throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
+            throw new IllegalStateException("decodeBType binInstruction is not 32. Length is " + binInst.length());
 
 
-        String bin = binInst.substring(6,31);
+        String bin = binInst.substring(6, 31);
 
 
         int dec = convertBinToDec(bin);
-        outputFile.write(String.format("%s %d", currInst.getName(), dec));
+        outputFile.write(String.format("%s %d\n", currInst.getName(), dec));
 
     }
 
@@ -193,46 +192,75 @@ public class Decode
         // rt        4 - 0     27 - 31
 
         if(binInst.length() != 32)
-            throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
+            throw new IllegalStateException("decodeCBType binInstruction is not 32. Length is " + binInst.length());
 
         int rt = convertBinToDec(binInst.substring(27, 31));
-        int branchTo = convertBinToDec(binInst.substring(8 ,26));
+        int branchTo = convertBinToDec(binInst.substring(8, 26));
 
         String cond = "";
         switch(rt)
         {
-            case 0: cond = "EQ"; break;
+            case 0:
+                cond = "EQ";
+                break;
 
-            case 1: cond = "NE"; break;
+            case 1:
+                cond = "NE";
+                break;
 
-            case 2: cond = "HS"; break;
+            case 2:
+                cond = "HS";
+                break;
 
-            case 3: cond = "LO"; break;
+            case 3:
+                cond = "LO";
+                break;
 
-            case 4: cond = "MI"; break;
+            case 4:
+                cond = "MI";
+                break;
 
-            case 5: cond = "PL"; break;
+            case 5:
+                cond = "PL";
+                break;
 
-            case 6: cond = "VS"; break;
+            case 6:
+                cond = "VS";
+                break;
 
-            case 7: cond = "VC"; break;
+            case 7:
+                cond = "VC";
+                break;
 
-            case 8: cond = "HI"; break;
+            case 8:
+                cond = "HI";
+                break;
 
-            case 9: cond = "LS"; break;
+            case 9:
+                cond = "LS";
+                break;
 
-            case 10: cond = "GE"; break;
+            case 10:
+                cond = "GE";
+                break;
 
-            case 11: cond = "LT"; break;
+            case 11:
+                cond = "LT";
+                break;
 
-            case 12: cond = "GT"; break;
+            case 12:
+                cond = "GT";
+                break;
 
-            case 13: cond = "LE"; break;
+            case 13:
+                cond = "LE";
+                break;
 
-            default: throw new IllegalStateException("CB rt value is should be less than 16 but is " + rt);
+            default:
+                throw new IllegalStateException("CB rt value is should be less than 16 but is " + rt);
         }
 
-        return String.format("%s %d", "B." + cond, branchTo);
+        return String.format("%s %d\n", "B." + cond, branchTo);
 
     }
 
@@ -266,6 +294,45 @@ public class Decode
             int opcodeBegin = s.lastIndexOf("b");
             instruction.setOpcode(s.substring(opcodeBegin + 1, opcodeEnd - 1).trim());
 
+            String[] R = new String[]{"ADD", "AND", "BR", "EOR", "LSL", "LSR", "ORR", "SUB", "SUBS", "MUL"};
+            String[] D = new String[]{"LDUR", "STUR"};
+            if(instruction.getOpcode().length() == 10)
+            {
+                instruction.setType("I");
+            }
+            else if(instruction.getOpcode().length() == 6)
+            {
+                instruction.setType("B");
+            }
+            else if(instruction.getOpcode().length() == 8)
+            {
+                instruction.setType("CB");
+            }
+            else if(instruction.getOpcode().length() == 11)
+            {
+                int k;
+                for(k = 0; k < R.length; ++k)
+                {
+                    if(R[k].equals(instruction.getName()))
+                    {
+                        instruction.setType("R");
+                    }
+                }
+
+                for(k = 0; k < D.length; ++k)
+                {
+                    if(D[k].equals(instruction.getName()))
+                    {
+                        instruction.setType("D");
+                    }
+                }
+            }
+
+            if(instruction.getType() == null)
+            {
+                instruction.setType("S");
+            }
+
             allInstructions.add(instruction);
         }
 
@@ -274,7 +341,8 @@ public class Decode
 
     public static void readBitsFromFile()
     {
-        try {
+        try
+        {
             // create a reader
             FileInputStream fis = new FileInputStream(new File("machineinputfile"));
 
@@ -282,19 +350,21 @@ public class Decode
             int bit;
             int i = 0;
             String binInst = "";
-            while ((bit = fis.read()) != -1)
+            while((bit = fis.read()) != -1)
             {
-                char ch = (char)bit;
-                if(i==31)
+                char ch = (char) bit;
+                if(i == 32)
                 {
                     i = 0;
                     inst.add(binInst);
                     binInst = "";
-                }
-                else {
-                    if (ch == ' ') {
+                } else
+                {
+                    if(ch == ' ')
+                    {
                         ch = (char) fis.read();
-                    } else if(ch == '\n') {
+                    } else if(ch == '\n')
+                    {
                         ch = (char) fis.read();
                     }
                     binInst += ch;
@@ -306,7 +376,8 @@ public class Decode
             // close the reader
             fis.close();
 
-        } catch (IOException ex) {
+        } catch(IOException ex)
+        {
             ex.printStackTrace();
         }
 
@@ -315,11 +386,11 @@ public class Decode
     public static Tree treeGen(ArrayList<Instruction> instructions)
     {
         Tree t = new Tree();
-        for(Instruction inst: instructions)
+        for(Instruction inst : instructions)
         {
             Node iterator = t.root;
             String opCode = inst.getOpcode();
-            for(int i = 0; i<opCode.length(); i++)
+            for(int i = 0; i < opCode.length(); i++)
             {
                 char bit = opCode.charAt(i);
                 if(bit == '0')
@@ -330,8 +401,7 @@ public class Decode
                         iterator.getZero().setInstruction(null);
                     }
                     iterator = iterator.getZero();
-                }
-                else
+                } else
                 {
                     if(iterator.getOne() == null)
                     {
