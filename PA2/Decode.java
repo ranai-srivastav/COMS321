@@ -1,6 +1,7 @@
 import java.io.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class Decode
@@ -279,30 +280,36 @@ public class Decode
 
     public static void readBitsFromFile()
     {
-        ArrayList<Character> inst = new ArrayList<>();
+//        ArrayList<Character> inst = new ArrayList<>();
 
         try {
             // create a reader
             FileInputStream fis = new FileInputStream(new File("machineinputfile"));
 
             // read one byte at a time
-            int ch;
-            while ((ch = fis.read()) != -1) {
-                System.out.print((char) ch);
-
-//                try {
-//                    FileWriter myWriter = new FileWriter("input.txt");
-//                    myWriter.write((char) ch);
-//                    myWriter.close();
-//
-//                }
-//                catch (IOException e) {
-//
-//                    e.printStackTrace();
-//                }
-
-
+            int bit;
+            int i = 0;
+            String binInst = "";
+            while ((bit = fis.read()) != -1)
+            {
+                char ch = (char)bit;
+                if(i==31)
+                {
+                    i = 0;
+                    inst.add(binInst);
+                    binInst = "";
+                }
+                else {
+                    if (ch == ' ') {
+                        ch = (char) fis.read();
+                    } else if(ch == '\n') {
+                        ch = (char) fis.read();
+                    }
+                    binInst += ch;
+                    i++;
+                }
             }
+            System.out.println(Arrays.toString(inst.toArray()));
 
             // close the reader
             fis.close();
