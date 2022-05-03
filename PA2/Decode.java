@@ -31,7 +31,7 @@ public class Decode
             File toWrite = new File("decompiledCode.txt");
             FileWriter fw = new FileWriter(toWrite);
             Instruction currInst;
-            for(int k = 0; k < listOfInstructions.size(); k++)
+            for(int k = 0; k < 13; k++)
             {
                 Node iterator = opcodeTree.root;
                 String binaryInst = listOfInstructions.get(k);
@@ -85,7 +85,7 @@ public class Decode
         // ________________________________
         // 31                             0
         // Name    R - L    L - R
-        // opcode 31 - 21   0  - 10
+        // opcode 31 - 21   0  - 11
         // Rm     20 - 16   11 - 15
         // shamt  15 - 10   16 - 21
         // rn      9 - 5    22 - 26
@@ -94,18 +94,28 @@ public class Decode
         if(binInst.length() != 32)
             throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
 
-        String rm = binInst.substring(11, 15);
-        String shamt = binInst.substring(16, 21);
-        String rn = binInst.substring(22, 26);
-        String rd = binInst.substring(27, 31);
+        String rm = binInst.substring(11, 16);
+        String shamt = binInst.substring(16, 22);
+        String rn = binInst.substring(22, 27);
+        String rd = binInst.substring(27, 32);
 
         int rmInt = convertBinToDec(rm);
         int shamtInt = convertBinToDec(shamt);
         int rnInt = convertBinToDec(rn);
         int rdInt = convertBinToDec(rd);
 
+        if(currInst.getName().equals("BR"))
+            outputFile.write(String.format("%s %d\n", currInst.getName(), rnInt));
+        else
+            outputFile.write(String.format("%s X%d, X%d, X%d\n", currInst.getName(), rdInt, rnInt, rmInt));
 
-        outputFile.write(String.format("%s X%d, X%d, X%d\n", currInst.getName(), rmInt, rnInt, rdInt));
+//        String output = "";
+//        if(rmInt == 31 )
+//            output= String.format("%s X%s, X%d, X%d\n", currInst.getName(), "ZR", rnInt, rdInt);
+//        if(rnInt == 31 )
+//            output= String.format("%s X%d, X%s, X%d\n", currInst.getName(), rmInt, "ZR", rdInt);
+//        if(rdInt == 31 )
+//            output= String.format("%s X%d, X%d, X%s\n", currInst.getName(), rmInt, rnInt, "ZR");
     }
 
     public static void decodeIType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
@@ -122,15 +132,15 @@ public class Decode
         if(binInst.length() != 32)
             throw new IllegalStateException("decodeIType binInstruction is not 32. Length is " + binInst.length());
 
-        String AUL = binInst.substring(10, 21);
-        String rn = binInst.substring(22, 26);
-        String rd = binInst.substring(27, 31);
+        String AUL = binInst.substring(10, 22);
+        String rn = binInst.substring(22, 27);
+        String rd = binInst.substring(27, 32);
 
         int AULInt = convertBinToDec(AUL);
         int rnInt = convertBinToDec(rn);
         int rdInt = convertBinToDec(rd);
 
-        outputFile.write(String.format("%s X%d, X%d, #%d\n", currInst.getName(), AULInt, rnInt, rdInt));
+        outputFile.write(String.format("%s X%d, X%d, #%d\n", currInst.getName(), rdInt , rnInt, AULInt));
     }
 
     public static void decodeDType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
@@ -147,17 +157,17 @@ public class Decode
         if(binInst.length() != 32)
             throw new IllegalStateException("decodeDType binInstruction is not 32. Length is " + binInst.length());
 
-        String Dt = binInst.substring(11, 19);
-        String op = binInst.substring(20, 21);
-        String rn = binInst.substring(22, 26);
-        String rt = binInst.substring(27, 31);
+        String Dt = binInst.substring(11, 20);
+        String op = binInst.substring(20, 22);
+        String rn = binInst.substring(22, 27);
+        String rt = binInst.substring(27, 32);
 
-        int rmInt = convertBinToDec(Dt);
+        int dtInt = convertBinToDec(Dt);
         int shamtInt = convertBinToDec(op);
         int rnInt = convertBinToDec(rn);
-        int rdInt = convertBinToDec(rt);
+        int rtInt = convertBinToDec(rt);
 
-        outputFile.write(String.format("%s X%d, X%d, X%d\n", currInst.getName(), rmInt, rnInt, rdInt));
+        outputFile.write(String.format("%s X%d, [X%d, #%d]\n", currInst.getName(), rtInt, rnInt, dtInt));
     }
 
     public static void decodeBType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
@@ -173,7 +183,7 @@ public class Decode
             throw new IllegalStateException("decodeBType binInstruction is not 32. Length is " + binInst.length());
 
 
-        String bin = binInst.substring(6, 31);
+        String bin = binInst.substring(6, 32);
 
 
         int dec = convertBinToDec(bin);
@@ -181,7 +191,7 @@ public class Decode
 
     }
 
-    public static String decodeCBType(Instruction currInst, String binInst, FileWriter outputFile)
+    public static void decodeCBType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
     {
         // 0                              31
         // ________________________________
@@ -194,8 +204,8 @@ public class Decode
         if(binInst.length() != 32)
             throw new IllegalStateException("decodeCBType binInstruction is not 32. Length is " + binInst.length());
 
-        int rt = convertBinToDec(binInst.substring(27, 31));
-        int branchTo = convertBinToDec(binInst.substring(8, 26));
+        int branchTo = convertBinToDec(binInst.substring(8, 27));
+        int rt = convertBinToDec(binInst.substring(27, 32));
 
         String cond = "";
         switch(rt)
@@ -260,12 +270,49 @@ public class Decode
                 throw new IllegalStateException("CB rt value is should be less than 16 but is " + rt);
         }
 
-        return String.format("%s %d\n", "B." + cond, branchTo);
+        outputFile.write(String.format("%s %d\n", "B." + cond, branchTo));
 
     }
 
     public static int convertBinToDec(String toConvert)
     {
+        int returnable = 0;
+            for(int i = 0; i < toConvert.length(); i++)
+            {
+                char c = toConvert.charAt(toConvert.length() - i - 1);
+                int bit = Integer.parseInt(String.valueOf(c));
+                double pow = (bit == 0) ? 0 : Math.pow(2 * bit, i);
+                returnable += pow;
+            }
+            return returnable;
+    }
+
+    public static int convert2sToDec(String toConvert)
+    {
+        int k = 1;
+        if (toConvert.charAt(0) == '1')
+        {
+            String s = "";
+            int i = toConvert.length()-1;
+            while(toConvert.charAt(i) != '1')
+            {
+                s = toConvert.charAt(i) + s;
+                i--;
+            }
+            s = toConvert.charAt(i) + s;
+            i = i-1;
+            while(i >= 0)
+            {
+                if(toConvert.charAt(i)=='0')
+                    s = '1' + s;
+                else
+                    s = '0' + s;
+
+                i--;
+            }
+            toConvert = s;
+            k = -1;
+        }
         int returnable = 0;
         for(int i = 0; i < toConvert.length(); i++)
         {
@@ -274,7 +321,7 @@ public class Decode
             double pow = (bit == 0) ? 0 : Math.pow(2 * bit, i);
             returnable += pow;
         }
-        return returnable;
+        return k * returnable;
     }
 
     public static ArrayList<Instruction> parseInstruction()
@@ -294,7 +341,7 @@ public class Decode
             int opcodeBegin = s.lastIndexOf("b");
             instruction.setOpcode(s.substring(opcodeBegin + 1, opcodeEnd - 1).trim());
 
-            String[] R = new String[]{"ADD", "AND", "BR", "EOR", "LSL", "LSR", "ORR", "SUB", "SUBS", "MUL"};
+            String[] R = new String[]{"ADD", "AND", "BR", "EOR", "LSL", "LSR", "ORR", "SUB", "SUBS", "MUL", "PRNT", "PRNL", "DUMP", "HALT"};
             String[] D = new String[]{"LDUR", "STUR"};
             if(instruction.getOpcode().length() == 10)
             {
@@ -326,11 +373,6 @@ public class Decode
                         instruction.setType("D");
                     }
                 }
-            }
-
-            if(instruction.getType() == null)
-            {
-                instruction.setType("S");
             }
 
             allInstructions.add(instruction);
