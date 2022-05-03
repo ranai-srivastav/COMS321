@@ -1,8 +1,3 @@
-public class Tree
-{
-    final Node root = new Node();
-}
-
 class Node
 {
     Node(){}
@@ -65,6 +60,11 @@ class Node
     {
         this.i = i;
     }
-
-
 }
+
+public class Tree
+{
+    final Node root = new Node(null, null, null);
+//    root.setParent(null);
+}
+

@@ -2,6 +2,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 
 public class Decode
@@ -12,14 +13,13 @@ public class Decode
     public static void main(String[] args) throws IOException
     {
         readBitsFromFile();
-//        readOpcodesFromFile();
-//
-//        ArrayList<Instruction> allInstructions = parseInstruction();
-//
-//        Tree opcodeTree = treeGen(allInstructions);
-//
-//        decode(opcodeTree, inst);
+        readOpcodesFromFile();
 
+        ArrayList<Instruction> allInstructions = parseInstruction();
+
+        Tree opcodeTree = treeGen(allInstructions);
+
+        decode(opcodeTree, inst);
     }
 
     public static void decode (Tree opcodeTree, ArrayList<String> listOfInstructions)
@@ -34,7 +34,7 @@ public class Decode
             {
                 String binaryInst = listOfInstructions.get(k);
                 int i = 0;
-                while(iterator.getInstruction() != null)
+                while(iterator.getInstruction() == null)
                 {
                     char c = binaryInst.charAt(i);
                     if(c == '0')
@@ -49,7 +49,6 @@ public class Decode
                     if(i > 11) throw new IllegalStateException("You fucked up " +
                             "\n   k = " + k
                     );
-
                 }
                 currInst = iterator.getInstruction();
 
@@ -93,6 +92,7 @@ public class Decode
         // shamt  15 - 10   16 - 21
         // rn      9 - 5    22 - 26
         // rd      4 - 0    27 - 31
+
         if(binInst.length() != 32)
             throw new IllegalStateException("decodeRType binInstruction is not 32. Length is " + binInst.length());
 
@@ -232,8 +232,6 @@ public class Decode
             default: throw new IllegalStateException("CB rt value is should be less than 16 but is " + rt);
         }
 
-
-
         return String.format("%s %d", "B." + cond, branchTo);
 
     }
@@ -268,10 +266,6 @@ public class Decode
             int opcodeBegin = s.lastIndexOf("b");
             instruction.setOpcode(s.substring(opcodeBegin + 1, opcodeEnd - 1).trim());
 
-            // list of insts here
-            //
-            // allInstructions.setType("XYZ")''
-
             allInstructions.add(instruction);
         }
 
@@ -280,8 +274,6 @@ public class Decode
 
     public static void readBitsFromFile()
     {
-//        ArrayList<Character> inst = new ArrayList<>();
-
         try {
             // create a reader
             FileInputStream fis = new FileInputStream(new File("machineinputfile"));
@@ -309,7 +301,7 @@ public class Decode
                     i++;
                 }
             }
-            System.out.println(Arrays.toString(inst.toArray()));
+//            System.out.println(Arrays.toString(inst.toArray()));
 
             // close the reader
             fis.close();
@@ -318,6 +310,63 @@ public class Decode
             ex.printStackTrace();
         }
 
+    }
+
+    public static Tree treeGen(ArrayList<Instruction> instructions)
+    {
+        Tree t = new Tree();
+        for(Instruction inst: instructions)
+        {
+            Node iterator = t.root;
+            String opCode = inst.getOpcode();
+            for(int i = 0; i<opCode.length(); i++)
+            {
+                char bit = opCode.charAt(i);
+                if(bit == '0')
+                {
+                    if(iterator.getZero() == null)
+                    {
+                        iterator.setZero(new Node(iterator, null, null));
+                        iterator.getZero().setInstruction(null);
+                    }
+                    iterator = iterator.getZero();
+                }
+                else
+                {
+                    if(iterator.getOne() == null)
+                    {
+                        iterator.setOne(new Node(iterator, null, null));
+                        iterator.getOne().setInstruction(null);
+                    }
+                    iterator = iterator.getOne();
+                }
+            }
+//            iterator = iterator.getParent();
+            iterator.setOne(null);
+            iterator.setZero(null);
+            iterator.setInstruction(inst);
+        }
+        return t;
+    }
+
+    public static void readOpcodesFromFile()
+    {
+        String[] name = new String[100];
+        try
+        {
+            File myObj = new File("opcodes.txt");
+            Scanner myReader = new Scanner(myObj);
+            while(myReader.hasNext())
+            {
+                String data = myReader.nextLine();
+                list.add(data);
+            }
+            myReader.close();
+        } catch(FileNotFoundException e)
+        {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 
 }
