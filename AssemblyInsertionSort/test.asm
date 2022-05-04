@@ -1,22 +1,16 @@
-Main:
-    
-    BL Dumbo
-
-    DUMP
-    B End
-    // I MIGHT BE DOING UNNECESSARY SP SHIT
-
-
-//Takes addr, val, final_pos in the array
-Dumbo:
-    PRNT X10
-    FindSortedLoop:
-        LDUR X13,[X0, #0]     // val at [i]
-        SUBS XZR, X13, X1     // Comparing i and val
-        B.GE FindSorted_End
+//FILL WORKS
+Fill:
+    SUBI SP, SP, #16
+    STUR X0, [SP, #0]
+    STUR X1, [SP, #8]
+    Fill_loop:
+        CBZ X1, Fill_End
+        STUR X1, [X0, #0]
         ADDI X0, X0, #8
-        B FindSortedLoop
-    FindSorted_End:
+        SUBI X1, X1, #1
+        B Fill_loop
+    Fill_End: 
+        LDUR X0, [SP, #0]
+        LDUR X1, [SP, #8]
+        ADDI SP, SP, #16
     BR LR
-
-End:

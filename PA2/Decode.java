@@ -1,7 +1,5 @@
 import java.io.*;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 
@@ -31,7 +29,8 @@ public class Decode
             File toWrite = new File("decompiledCode.txt");
             FileWriter fw = new FileWriter(toWrite);
             Instruction currInst;
-            for(int k = 0; k < listOfInstructions.size(); k++)
+
+            for( int k = 0; k < listOfInstructions.size(); k++)
             {
                 Node iterator = opcodeTree.root;
                 String binaryInst = listOfInstructions.get(k);
@@ -64,12 +63,12 @@ public class Decode
                     decodeDType(currInst, binaryInst, fw);
                 } else if(currInst.getType().equals("B"))
                 {
-                    decodeBType(currInst, binaryInst, fw);
+                    decodeBType(currInst, binaryInst, fw, k);
                 } else if(currInst.getType().equals("CB"))
                 {
                     decodeCBType(currInst, binaryInst, fw);
                 }
-
+                fw.write(String.format("%d:\n", k));
             }
             fw.close();
         } catch(IOException e)
@@ -106,6 +105,14 @@ public class Decode
 
         if(currInst.getName().equals("BR"))
             outputFile.write(String.format("%s %d\n", currInst.getName(), rnInt));
+        else if(currInst.getName().equals("PRNT"))
+        {
+            outputFile.write(String.format("%s X%d\n", currInst.getName(), rdInt));
+        }
+        else if(currInst.getName().equals("DUMP") || currInst.getName().equals("HALT") || currInst.getName().equals("PRNL"))
+        {
+            outputFile.write(String.format("%s\n", currInst.getName()));
+        }
         else
             outputFile.write(String.format("%s X%d, X%d, X%d\n", currInst.getName(), rdInt, rnInt, rmInt));
 
@@ -170,7 +177,7 @@ public class Decode
         outputFile.write(String.format("%s X%d, [X%d, #%d]\n", currInst.getName(), rtInt, rnInt, dtInt));
     }
 
-    public static void decodeBType(Instruction currInst, String binInst, FileWriter outputFile) throws IOException
+    public static void decodeBType(Instruction currInst, String binInst, FileWriter outputFile, int line) throws IOException
     {
         // 0                              31
         // ________________________________
@@ -187,7 +194,9 @@ public class Decode
 
 
         int dec = convertBinToDec(bin);
-        outputFile.write(String.format("%s %d\n", currInst.getName(), dec));
+
+            int l = line + dec;
+            outputFile.write(String.format("%s %d\n", currInst.getName(), l+1));
 
     }
 
@@ -386,7 +395,7 @@ public class Decode
         try
         {
             // create a reader
-            FileInputStream fis = new FileInputStream(new File("machineinputfile"));
+            FileInputStream fis = new FileInputStream(new File("assignment1.legv8asm.machine"));
 
             // read one byte at a time
             int bit;
