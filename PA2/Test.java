@@ -13,9 +13,11 @@ public class Test
 //        bufferedReaderLineByLine();
 //        System.out.println();
 
-        System.out.println("bufferedReaderCharbyChar");
-        bufferedReaderCharByChar();
-        System.out.println();
+//        System.out.println("bufferedReaderCharbyChar");
+//        bufferedReaderCharByChar();
+//        System.out.println();
+
+        stackoverflow();
 
     }
 
@@ -53,5 +55,34 @@ public class Test
         }
     }
 
-    public static void stackoverflow
+    public static void stackoverflow()
+    {
+        File infile = new File("assignment1.legv8asm.machine");
+        try
+            {
+                byte[] buffer = new byte[(int)infile.length()];
+                FileInputStream inputStream = new FileInputStream(infile);
+
+                int total = 0;
+                int nRead = 0;
+                while((nRead = inputStream.read(buffer)) != -1)
+                {
+                    for (int i = 0; i<nRead; i++) {
+                        String bin=Integer.toBinaryString(0xFF & buffer[i] | 0x100).substring(1);
+                        System.out.println(bin);
+                    }
+                }
+                inputStream.close();
+                System.out.println(total);
+            }
+            catch(FileNotFoundException ex)
+            {
+                System.out.println("File not found.");
+            }
+
+            catch(IOException ex)
+            {
+                System.out.println(ex);
+            }
+        }
 }

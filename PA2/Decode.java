@@ -392,44 +392,32 @@ public class Decode
 
     public static void readBitsFromFile()
     {
+        File infile = new File("assignment1.legv8asm.machine");
         try
         {
-            // create a reader
-            FileInputStream fis = new FileInputStream(new File("assignment1.legv8asm.machine"));
+            byte[] buffer = new byte[(int)infile.length()];
+            FileInputStream inputStream = new FileInputStream(infile);
 
-            // read one byte at a time
-            int bit;
-            int i = 0;
-            String binInst = "";
-            while((bit = fis.read()) != -1)
+            int total = 0;
+            int nRead = 0;
+            while((nRead = inputStream.read(buffer)) != -1)
             {
-                char ch = (char) bit;
-                if(i == 32)
-                {
-                    i = 0;
-                    inst.add(binInst);
-                    binInst = "";
-                } else
-                {
-                    if(ch == ' ')
-                    {
-                        ch = (char) fis.read();
-                    } else if(ch == '\n')
-                    {
-                        ch = (char) fis.read();
-                    }
-                    binInst += ch;
-                    i++;
+                for (int i = 0; i<nRead; i++) {
+                    String bin=Integer.toBinaryString(0xFF & buffer[i] | 0x100).substring(1);
+                    System.out.println(bin);
                 }
             }
-//            System.out.println(Arrays.toString(inst.toArray()));
-
-            // close the reader
-            fis.close();
-
-        } catch(IOException ex)
+            inputStream.close();
+            System.out.println(total);
+        }
+        catch(FileNotFoundException ex)
         {
-            ex.printStackTrace();
+            System.out.println("File not found.");
+        }
+
+        catch(IOException ex)
+        {
+            System.out.println(ex);
         }
 
     }
