@@ -52,6 +52,7 @@ public class Decode
                 }
                 currInst = iterator.getInstruction();
 
+                fw.write(String.format("%d:\n", k));
                 if(currInst.getType().equals("R"))
                 {
                     decodeRType(currInst, binaryInst, fw);
@@ -68,7 +69,6 @@ public class Decode
                 {
                     decodeCBType(currInst, binaryInst, fw);
                 }
-                fw.write(String.format("%d:\n", k));
             }
             fw.close();
         } catch(IOException e)
@@ -283,19 +283,6 @@ public class Decode
 
     }
 
-//    public static int convertBinToDec(String toConvert)
-//    {
-//        int returnable = 0;
-//            for(int i = 0; i < toConvert.length(); i++)
-//            {
-//                char c = toConvert.charAt(toConvert.length() - i - 1);
-//                int bit = Integer.parseInt(String.valueOf(c));
-//                double pow = (bit == 0) ? 0 : Math.pow(2 * bit, i);
-//                returnable += pow;
-//            }
-//            return returnable;
-//    }
-
     public static int convertBinToDec(String toConvert)
     {
         int k = 1;
@@ -400,15 +387,23 @@ public class Decode
 
             int total = 0;
             int nRead = 0;
+
+            String s = "";
             while((nRead = inputStream.read(buffer)) != -1)
             {
-                for (int i = 0; i<nRead; i++) {
-                    String bin=Integer.toBinaryString(0xFF & buffer[i] | 0x100).substring(1);
-                    System.out.println(bin);
+                for (int i = 0; i<nRead; i++)
+                {
+                    String bin = Integer.toBinaryString(0xFF & buffer[i] | 0x100).substring(1);
+                    s += bin;
+
+                    if(s.length() == 32)
+                    {
+                        inst.add(s);
+                        s = "";
+                    }
                 }
             }
             inputStream.close();
-            System.out.println(total);
         }
         catch(FileNotFoundException ex)
         {
@@ -417,7 +412,7 @@ public class Decode
 
         catch(IOException ex)
         {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
     }
